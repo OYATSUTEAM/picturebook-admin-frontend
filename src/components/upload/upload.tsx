@@ -48,12 +48,12 @@ export default function Upload({
 
   const renderPlaceholder = (
     <Stack spacing={3} alignItems="center" justifyContent="center" flexWrap="wrap">
-      <UploadIllustration sx={{ width: 1, maxWidth: 200 }} />
+      {/* <UploadIllustration sx={{ width: 1, maxWidth: 200 }} /> */}
       <Stack spacing={1} sx={{ textAlign: 'center' }}>
         <Typography variant="h6">Drop or Select file</Typography>
         <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-          Drop files here or click
-          <Box
+          Drop files here or click browse thorough your machine
+          {/* <Box
             component="span"
             sx={{
               mx: 0.5,
@@ -61,9 +61,7 @@ export default function Upload({
               textDecoration: 'underline',
             }}
           >
-            browse
-          </Box>
-          thorough your machine
+          </Box> */}
         </Typography>
       </Stack>
     </Stack>
@@ -163,7 +161,7 @@ export default function Upload({
 
       {helperText && helperText}
 
-      <RejectionFiles fileRejections={fileRejections} />
+      {/* <RejectionFiles fileRejections={fileRejections} /> */}
 
       {renderMultiPreview}
     </Box>

@@ -7,6 +7,7 @@ import IconButton from '@mui/material/IconButton';
 import TableContainer from '@mui/material/TableContainer';
 import { tableCellClasses } from '@mui/material/TableCell';
 import { tablePaginationClasses } from '@mui/material/TablePagination';
+import { PRODUCT_PUBLISH_OPTIONS } from 'src/_mock';
 
 import Iconify from 'src/components/iconify';
 import {
@@ -20,16 +21,18 @@ import {
 import { IFile } from 'src/types/file';
 
 import FileManagerTableRow from './file-manager-table-row';
+import { useCallback, useEffect, useState } from 'react';
 
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
   { id: 'name', label: 'Name' },
-  { id: 'size', label: 'Size', width: 120 },
-  { id: 'type', label: 'Type', width: 120 },
-  { id: 'modifiedAt', label: 'Modified', width: 140 },
-  { id: 'shared', label: 'Shared', align: 'right', width: 140 },
-  { id: '', width: 88 },
+  { id: 'price', label: 'Price', align: 'center', width: 140 },
+  { id: 'size', label: 'Size', align: 'center', width: 140 },
+  { id: 'modifiedAt', label: 'Modified', align: 'center', width: 140 },
+  { id: 'shared', label: 'Purchased', align: 'center', width: 140 },
+  { id: 'publish', label: 'Publish', align: 'center', width: 120 },
+  { id: '', align: 'center', width: 88 },
 ];
 
 // ----------------------------------------------------------------------
@@ -50,6 +53,19 @@ export default function FileManagerTable({
   onOpenConfirm,
 }: Props) {
   const theme = useTheme();
+
+  const [publish, setPublish] = useState('published');
+
+  const handleChangePublish = useCallback((newValue: string) => {
+    setPublish(newValue);
+  }, []);
+
+  // useEffect(() => {
+  //   if (product) {
+  //     setPublish(product?.publish);
+  //   }
+  // }, [product]);
+
 
   const {
     dense,
@@ -158,7 +174,7 @@ export default function FileManagerTable({
                 .map((row) => (
                   <FileManagerTableRow
                     key={row.id}
-                    row={row}
+                    row={{ ...row, publishOptions: PRODUCT_PUBLISH_OPTIONS, onChangePublish: handleChangePublish }}
                     selected={selected.includes(row.id)}
                     onSelectRow={() => onSelectRow(row.id)}
                     onDeleteRow={() => onDeleteRow(row.id)}

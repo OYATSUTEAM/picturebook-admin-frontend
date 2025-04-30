@@ -58,10 +58,9 @@ export function useGetProduct(productId: string) {
   const URL = productId ? [endpoints.product.details, { params: { productId } }] : '';
 
   const { data, isLoading, error, isValidating } = useSWR(URL, poster);
-
   const memoizedValue = useMemo(
     () => ({
-      product: data?.product as IProductItem,
+      product: data?.product as IFile,
       productLoading: isLoading,
       productError: error,
       productValidating: isValidating,

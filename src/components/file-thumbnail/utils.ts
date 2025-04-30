@@ -138,13 +138,10 @@ export function fileData(file: ExtendFile | string) {
 
   // File
   return {
-    key: file.preview,
+    key: file.preview || file.name,
     name: file.name,
-    // size: file.size,
     path: file.path,
-    // type: file.type,
-    // preview: file.preview,
-    // lastModified: file.lastModified,
-    // lastModifiedDate: file.lastModifiedDate,
+    type: file.type,
+    preview: file.preview,
   };
 }

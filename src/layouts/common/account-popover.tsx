@@ -19,6 +19,7 @@ import { useAuthContext } from 'src/auth/hooks';
 import { varHover } from 'src/components/animate';
 import { useSnackbar } from 'src/components/snackbar';
 import CustomPopover, { usePopover } from 'src/components/custom-popover';
+import { colors } from '@mui/material';
 
 // ----------------------------------------------------------------------
 
@@ -42,8 +43,9 @@ const OPTIONS = [
 export default function AccountPopover() {
   const router = useRouter();
 
-  const { user } = useMockedUser();
+  const { user } = useAuthContext();
 
+  console.log(user)
   const { logout } = useAuthContext();
 
   const { enqueueSnackbar } = useSnackbar();
@@ -77,7 +79,7 @@ export default function AccountPopover() {
         sx={{
           width: 40,
           height: 40,
-          background: (theme) => alpha(theme.palette.grey[500], 0.08),
+          background: (theme) =>  `linear-gradient(135deg, ${theme.palette.primary.light} 0%, ${theme.palette.primary.main} 100%)`,
           ...(popover.open && {
             background: (theme) =>
               `linear-gradient(135deg, ${theme.palette.primary.light} 0%, ${theme.palette.primary.main} 100%)`,
@@ -85,12 +87,14 @@ export default function AccountPopover() {
         }}
       >
         <Avatar
-          src={user?.photoURL}
+          // src={user?.photoURL}
           alt={user?.displayName}
           sx={{
             width: 36,
             height: 36,
             border: (theme) => `solid 2px ${theme.palette.background.default}`,
+            color: (theme) => colors.common.white
+            // backgroundColor: (theme) => alpha(theme.palette.success.main, 0.08),
           }}
         >
           {user?.displayName?.charAt(0).toUpperCase()}

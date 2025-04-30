@@ -33,7 +33,7 @@ import FileManagerNewFolderDialog from '../file-manager-new-folder-dialog';
 import CustomBreadcrumbs from 'src/components/custom-breadcrumbs';
 import { paths } from 'src/routes/paths';
 import { RouterLink } from 'src/routes/components';
-import { useGetFileProducts,  } from 'src/api/product';
+import { useGetFileProducts, } from 'src/api/product';
 import { IProductItem } from 'src/types/product';
 
 // ----------------------------------------------------------------------
@@ -63,7 +63,7 @@ export default function FileManagerView() {
   const [view, setView] = useState('list');
 
   const { products, productsLoading } = useGetFileProducts();
-  
+
 
   // const [tableData, setTableData] = useState<IFile[]>(_allFiles);
   const [tableData, setTableData] = useState<IFile[]>([]);
@@ -89,11 +89,11 @@ export default function FileManagerView() {
 
   const notFound = (!dataFiltered.length && canReset) || !dataFiltered.length;
 
-    useEffect(() => {
-      if (products.length) {
-        setTableData(products);
-      }
-    }, [products]);
+  useEffect(() => {
+    if (products.length) {
+      setTableData(products);
+    }
+  }, [products]);
 
 
   const handleChangeView = useCallback(
@@ -191,10 +191,10 @@ export default function FileManagerView() {
   return (
     <>
       <Container maxWidth={settings.themeStretch ? false : 'lg'}>
-      <Stack
+        <Stack
           spacing={2.5}
           sx={{
-            my: { xs: 3, md: 5 },
+            my: { xs: 1, md: 2 },
           }}
         >
           {/* <Typography variant="h4">File Manager</Typography> */}
@@ -202,10 +202,7 @@ export default function FileManagerView() {
             heading="List"
             links={[
               { name: 'Dashboard', href: paths.dashboard.root },
-              {
-                name: 'Product',
-                href: paths.dashboard.product.root,
-              },
+              { name: 'Product', href: paths.dashboard.product.root, },
               { name: 'List' },
             ]}
             action={
@@ -222,8 +219,7 @@ export default function FileManagerView() {
             }
             sx={{
               mb: {
-                xs: 3,
-                md: 5,
+                xs: 0, md: 0,
               },
             }}
           />
@@ -232,7 +228,7 @@ export default function FileManagerView() {
         <Stack
           spacing={2.5}
           sx={{
-            my: { xs: 3, md: 5 },
+            my: { xs: 1, md: 1 },
           }}
         >
           {renderFilters}
@@ -329,9 +325,9 @@ function applyFilter({
     );
   }
 
-  if (type.length) {
-    inputData = inputData.filter((file) => type.includes(fileFormat(file.type)));
-  }
+  // if (type.length) {
+  //   inputData = inputData.filter((file) => type.includes(fileFormat(file.type)));
+  // }
 
   if (!dateError) {
     if (startDate && endDate) {

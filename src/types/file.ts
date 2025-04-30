@@ -20,31 +20,32 @@ export type IFileShared = {
 };
 
 export type IFolderManager = {
-  _id: string;
   id: string;
   name: string;
   size: number;
-  type: string;
+  publishOptions: {
+    value: string;
+    label: string;
+  }[];
+  description: string;
+  audioFiles: IFileManager[] | null;
+  pdfFile: IFileManager ;
   url: string;
-  // tags: string[];
+  publish: string;
+  price: number;
   totalFiles?: number;
-  // isFavorited: boolean;
-  shared: IFileShared[] | null;
-  // createdAt: Date | number | string;
-  modifiedAt: Date | number | string;
+  shared: IFileManager[] | [];
+  modifiedAt: Date | number ;
+  onChangePublish: (newValue: string) => void;
+
 };
 
 export type IFileManager = {
-  _id: string;
   id: string;
   name: string;
   size: number;
   type: string;
   url: string;
-  // tags: string[];
-  // isFavorited: boolean;
-  shared: IFileShared[] | null;
-  // createdAt: Date | number | string;
   modifiedAt: Date | number | string;
 };
 

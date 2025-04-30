@@ -27,7 +27,7 @@ import FileThumbnail from 'src/components/file-thumbnail';
 import { ConfirmDialog } from 'src/components/custom-dialog';
 import CustomPopover, { usePopover } from 'src/components/custom-popover';
 
-import { IFileManager } from 'src/types/file';
+import { IFile, IFileManager } from 'src/types/file';
 
 import FileManagerShareDialog from './file-manager-share-dialog';
 import FileManagerFileDetails from './file-manager-file-details';
@@ -35,11 +35,13 @@ import Link from '@mui/material/Link';
 
 import { RouterLink } from 'src/routes/components';
 import { paths } from 'src/routes/paths';
+import { Chip, colors } from '@mui/material';
+import { LoadingButton } from '@mui/lab';
 
 // ----------------------------------------------------------------------
 
 type Props = {
-  row: IFileManager;
+  row: IFile;
   selected: boolean;
   onSelectRow: VoidFunction;
   onDeleteRow: VoidFunction;
@@ -49,9 +51,10 @@ export default function FileManagerTableRow({ row, selected, onSelectRow, onDele
   const theme = useTheme();
 
   // const { name, size, type, modifiedAt, shared, isFavorited } = row;
-  const { name, size, type, modifiedAt, shared, _id } = row;
+  const { name, price, size, modifiedAt, publishOptions, shared, publish, onChangePublish } = row;
+
   const { enqueueSnackbar } = useSnackbar();
-console.log(row , 'this is id')
+
   const { copy } = useCopyToClipboard();
 
   const [inviteEmail, setInviteEmail] = useState('');
@@ -135,11 +138,9 @@ console.log(row , 'this is id')
         </TableCell>
 
         <TableCell onClick={handleClick}>
-          <Link component={RouterLink} href={paths.dashboard.admin.product.details(row._id)} variant="subtitle2">
-
+          <Link component={RouterLink} href={paths.dashboard.admin.product.details(row.id)} variant="subtitle2">
             <Stack direction="row" alignItems="center" spacing={2}>
-              <FileThumbnail file={type} sx={{ width: 36, height: 36 }} />
-
+              <FileThumbnail file={'folder'} sx={{ width: 36, height: 36 }} />
               <Typography
                 noWrap
                 variant="inherit"
@@ -156,15 +157,16 @@ console.log(row , 'this is id')
 
         </TableCell>
 
-        <TableCell onClick={handleClick} sx={{ whiteSpace: 'nowrap' }}>
+        <TableCell align="center" onClick={handleClick} sx={{ whiteSpace: 'nowrap' }}>
+          {/* {price == 0 ? 'free' : price} */}
+          <Chip color={price !== 0 ? 'success' : 'error'} label={price == 0 ? 'free' : price} size="small" variant="soft" />
+        </TableCell>
+
+        <TableCell align="center" onClick={handleClick} sx={{ whiteSpace: 'nowrap' }}>
           {fData(size)}
         </TableCell>
 
-        <TableCell onClick={handleClick} sx={{ whiteSpace: 'nowrap' }}>
-          {type}
-        </TableCell>
-
-        <TableCell onClick={handleClick} sx={{ whiteSpace: 'nowrap' }}>
+        <TableCell align="center" onClick={handleClick} sx={{ whiteSpace: 'nowrap' }}>
           <ListItemText
             primary={fDate(modifiedAt)}
             secondary={fTime(modifiedAt)}
@@ -176,30 +178,18 @@ console.log(row , 'this is id')
             }}
           />
         </TableCell>
-
-        <TableCell align="right" onClick={handleClick}>
-          <AvatarGroup
-            max={4}
-            sx={{
-              display: 'inline-flex',
-              [`& .${avatarGroupClasses.avatar}`]: {
-                width: 24,
-                height: 24,
-                '&:first-of-type': {
-                  fontSize: 12,
-                },
-              },
-            }}
-          >
-            {shared &&
-              shared.map((person) => (
-                <Avatar key={person.id} alt={person.name} src={person.avatarUrl} />
-              ))}
-          </AvatarGroup>
+        <TableCell align="center" onClick={handleClick}>
+          {shared.length}
         </TableCell>
 
-        <TableCell
-          align="right"
+        <TableCell align="center" onClick={handleClick} sx={{ whiteSpace: 'nowrap' }}>
+
+          <Chip color={publish == 'published' ? 'success' : 'error'} label={publish} size="small" variant="soft" />
+
+        </TableCell>
+
+
+        <TableCell align="center"
           sx={{
             px: 1,
             whiteSpace: 'nowrap',
@@ -214,73 +204,34 @@ console.log(row , 'this is id')
             sx={{ p: 0.75 }}
           /> */}
 
-          <IconButton color={popover.open ? 'inherit' : 'default'} onClick={popover.onOpen}>
-            <Iconify icon="eva:more-vertical-fill" />
+          <IconButton color={confirm.value == true ? 'default' : 'error'} onClick={confirm.onTrue}>
+            <Iconify icon="ic:baseline-delete" />
           </IconButton>
         </TableCell>
-      </TableRow>
 
+
+      </TableRow>
       <CustomPopover
         open={popover.open}
         onClose={popover.onClose}
-        arrow="right-top"
-        sx={{ width: 160 }}
+        arrow="top-right"
+        sx={{ width: 140 }}
       >
-        <MenuItem
-          onClick={() => {
-            popover.onClose();
-            handleCopy();
-          }}
-        >
-          <Iconify icon="eva:link-2-fill" />
-          Copy Link
-        </MenuItem>
-
-        <MenuItem
-          onClick={() => {
-            popover.onClose();
-            share.onTrue();
-          }}
-        >
-          <Iconify icon="solar:share-bold" />
-          Share
-        </MenuItem>
-
-        <Divider sx={{ borderStyle: 'dashed' }} />
-
-        <MenuItem
-          onClick={() => {
-            confirm.onTrue();
-            popover.onClose();
-          }}
-          sx={{ color: 'error.main' }}
-        >
-          <Iconify icon="solar:trash-bin-trash-bold" />
-          Delete
-        </MenuItem>
+        {publishOptions.map((option) => (
+          <MenuItem
+            key={option.value}
+            selected={option.value === publish}
+            onClick={() => {
+              popover.onClose();
+              onChangePublish(option.value);
+            }}
+          >
+            {option.value === 'published' && <Iconify icon="eva:cloud-upload-fill" />}
+            {option.value === 'draft' && <Iconify icon="solar:file-text-bold" />}
+            {option.label}
+          </MenuItem>
+        ))}
       </CustomPopover>
-
-      {/* <FileManagerFileDetails
-        item={row}
-        // favorited={favorite.value}
-        // onFavorite={favorite.onToggle}
-        onCopyLink={handleCopy}
-        open={details.value}
-        onClose={details.onFalse}
-        onDelete={onDeleteRow}
-      /> */}
-
-      <FileManagerShareDialog
-        open={share.value}
-        shared={shared}
-        inviteEmail={inviteEmail}
-        onChangeInvite={handleChangeInvite}
-        onCopyLink={handleCopy}
-        onClose={() => {
-          share.onFalse();
-          setInviteEmail('');
-        }}
-      />
 
       <ConfirmDialog
         open={confirm.value}

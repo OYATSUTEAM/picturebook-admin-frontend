@@ -20,10 +20,12 @@ export default function RHFTextField({ name, helperText, type, ...other }: Props
           {...field}
           fullWidth
           type={type}
-          value={type === 'number' && field.value === 0 ? '' : field.value}
+          value={field.value}
           onChange={(event) => {
+            console.log(event.target.value)
             if (type === 'number') {
-              field.onChange(Number(event.target.value));
+              const value = event.target.value === '' ? 0 : Number(event.target.value);
+              field.onChange(value);
             } else {
               field.onChange(event.target.value);
             }

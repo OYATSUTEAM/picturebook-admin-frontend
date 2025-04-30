@@ -150,17 +150,6 @@ export const paths = {
       },
     },
 
-
-
-
-
-
-
-
-
-
-
-    
     product: {
       root: `${ROOTS.DASHBOARD}/product`,
       new: `${ROOTS.DASHBOARD}/product/new`,

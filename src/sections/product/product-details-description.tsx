@@ -3,7 +3,7 @@ import Markdown from 'src/components/markdown';
 // ----------------------------------------------------------------------
 
 type Props = {
-  description: string;
+  description: string|any;
 };
 
 export default function ProductDetailsDescription({ description }: Props) {

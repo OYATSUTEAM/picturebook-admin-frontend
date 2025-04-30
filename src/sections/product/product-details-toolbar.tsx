@@ -43,7 +43,7 @@ export default function ProductDetailsToolbar({
         spacing={1.5}
         direction="row"
         sx={{
-          mb: { xs: 3, md: 5 },
+          mb: { xs: 1, md: 1 },
           ...sx,
         }}
         {...other}
@@ -58,13 +58,13 @@ export default function ProductDetailsToolbar({
 
         <Box sx={{ flexGrow: 1 }} />
 
-        {publish === 'published' && (
+        {/* {publish === 'published' && (
           <Tooltip title="Go Live">
             <IconButton component={RouterLink} href={liveLink}>
               <Iconify icon="eva:external-link-fill" />
             </IconButton>
           </Tooltip>
-        )}
+        )} */}
 
         <Tooltip title="Edit">
           <IconButton component={RouterLink} href={editLink}>
@@ -73,7 +73,7 @@ export default function ProductDetailsToolbar({
         </Tooltip>
 
         <LoadingButton
-          color="inherit"
+          color={publish == 'published' ? 'success' : 'error'}
           variant="contained"
           loading={!publish}
           loadingIndicator="Loading…"

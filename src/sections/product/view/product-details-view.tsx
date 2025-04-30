@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
+import * as Yup from 'yup';
 
 import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
@@ -28,6 +29,18 @@ import ProductDetailsSummary from '../product-details-summary';
 import ProductDetailsToolbar from '../product-details-toolbar';
 import ProductDetailsCarousel from '../product-details-carousel';
 import ProductDetailsDescription from '../product-details-description';
+import { Divider, Stack } from '@mui/material';
+import FormProvider, { RHFEditor, RHFTextField } from 'src/components/hook-form';
+import { useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { useRouter, useSearchParams } from 'src/routes/hooks';
+import { useSnackbar } from 'notistack';
+import { useBoolean } from 'src/hooks/use-boolean';
+import Upload from 'src/components/upload/upload';
+import { LoadingButton } from '@mui/lab';
+import axios from 'axios';
+import { HOST_API } from 'src/config-global';
+import { endpoints } from 'src/utils/axios';
 
 // ----------------------------------------------------------------------
 
@@ -57,18 +70,60 @@ type Props = {
 
 export default function ProductDetailsView({ id }: Props) {
   const { product, productLoading, productError } = useGetProduct(id);
-  console.log(product ,'this is product detail')
+  console.log(product)
   const settings = useSettingsContext();
 
-  const [currentTab, setCurrentTab] = useState('description');
+  const [currentTab, setCurrentTab] = useState('publish');
 
-  const [publish, setPublish] = useState('');
+  const [publish, setPublish] = useState('published');
+  const router = useRouter();
+  const { enqueueSnackbar } = useSnackbar();
+  const preview = useBoolean();
+
+  const [audioFiles, setAudioFiles] = useState<(File)[]>([]);
+  const [pdfFile, setPDFFile] = useState<(File)[]>([]);
 
   useEffect(() => {
     if (product) {
       setPublish(product?.publish);
     }
   }, [product]);
+
+
+
+
+  const NewProductSchema = Yup.object().shape({
+    name: Yup.string().required('Name is required'),
+    price: Yup.number().required('Price is required'),
+    description: Yup.string().required('Description is required'),
+    pdf: Yup.mixed()
+      .nullable()
+      .test('file', 'PDF is required', (value) => value instanceof File),
+    audio: Yup.mixed()
+      .nullable()
+      .test('file', 'Audio is required', (value) => value instanceof File),
+  });
+
+
+
+
+  type FormValues = {
+    name: string;
+    price: number;
+    description: string;
+    pdf: File | null;
+    audio: File | null;
+  };
+  const methods = useForm<FormValues>({
+    resolver: yupResolver(NewProductSchema as any),
+    defaultValues: {
+      name: '',
+      price: 0,
+      description: '',
+      pdf: null,
+      audio: null,
+    },
+  });
 
   const handleChangePublish = useCallback((newValue: string) => {
     setPublish(newValue);
@@ -77,6 +132,88 @@ export default function ProductDetailsView({ id }: Props) {
   const handleChangeTab = useCallback((event: React.SyntheticEvent, newValue: string) => {
     setCurrentTab(newValue);
   }, []);
+
+  const {
+    setValue,
+    handleSubmit,
+    formState: { isSubmitting },
+  } = methods;
+
+
+  const handleDropPDFFile = useCallback(
+    (acceptedFiles: File[]) => {
+      const newFile = acceptedFiles[0];
+      if (newFile) {
+        const fileWithPreview = Object.assign(newFile, {
+          preview: URL.createObjectURL(newFile),
+        });
+        setPDFFile([fileWithPreview]);
+        setValue('pdf', fileWithPreview, { shouldValidate: true });
+      }
+    },
+    [setValue]
+  );
+
+  const handleDropMultiAudioFile = useCallback(
+    (acceptedFiles: File[]) => {
+      const newFiles = [
+        ...audioFiles,
+        ...acceptedFiles.map((file) =>
+          Object.assign(file, {
+            preview: URL.createObjectURL(file),
+          })
+        ),
+      ];
+      setAudioFiles(newFiles);
+      setValue('audio', newFiles[0], { shouldValidate: true }); // validate at least one
+    },
+    [audioFiles, setValue]
+  );
+
+  const handleRemovePDFFile = () => {
+    setPDFFile([]);
+    setValue('pdf', null, { shouldValidate: true });
+  };
+
+  const handleRemoveAudioFile = (inputFile: File | string) => {
+    const updated = audioFiles.filter((file) => file !== inputFile);
+    setAudioFiles(updated);
+    setValue('audio', updated[0] || null, { shouldValidate: true });
+  };
+
+  const handleRemoveAllFiles = () => {
+    setAudioFiles([]);
+    setValue('audio', null, { shouldValidate: true });
+  };
+
+  const onSubmit = handleSubmit(async (data) => {
+    try {
+      const formData = new FormData();
+      if (pdfFile.length > 0) {
+        formData.append('pdf', pdfFile[0] as File);
+      }
+      audioFiles.forEach((file, index) => {
+        if (file instanceof File) {
+          formData.append(`audio_${index}`, file);
+        }
+      });
+      formData.append('name', data.name);
+      formData.append('price', data.price.toString());
+      formData.append('description', data.description);
+      const filename: any = await axios.post(`${HOST_API}${endpoints.filename}`, { name: data.name });
+      console.log(filename)
+      if (filename.status == 200) {
+        const response = await axios.post(`${HOST_API}${endpoints.upload}`, formData);
+        enqueueSnackbar(response.data.message, { variant: 'success' });
+      }
+      else {
+      }
+      router.push(paths.dashboard.admin.product.root);
+    } catch (error) {
+      console.error('Upload error:', error);
+      enqueueSnackbar(error.response.data.message, { variant: 'error' });
+    }
+  });
 
   const renderSkeleton = <ProductDetailsSkeleton />;
 
@@ -97,29 +234,116 @@ export default function ProductDetailsView({ id }: Props) {
       sx={{ py: 10 }}
     />
   );
+  const renderDetails = (
+    <Grid xs={12} md={8}>
+      <Card>
+        <Stack spacing={3} sx={{ p: 3 }}>
+
+          <Stack spacing={1.5}>
+            <Typography variant="subtitle2">Name</Typography>
+            <RHFTextField name="name" label="" />
+          </Stack>
+
+          <Stack spacing={1.5}>
+            <Typography variant="subtitle2">Price</Typography>
+            <RHFTextField name="price" label="" type='number' />
+          </Stack>
+
+          <Stack spacing={1.5}>
+            <Typography variant="subtitle2">Content</Typography>
+            <RHFEditor simple name="description" />
+          </Stack>
+
+          <Stack spacing={1.5}>
+            <Typography variant="subtitle2">PDF</Typography>
+
+            <Upload
+              multiple={true}
+              thumbnail={preview.value}
+              files={pdfFile}
+              accept={{ 'application/pdf': [] }}
+              onDrop={handleDropPDFFile}
+              onRemove={handleRemovePDFFile}
+            />
+          </Stack>
+
+          <Stack spacing={1.5}>
+            <Typography variant="subtitle2">Audio</Typography>
+            <Upload
+              multiple
+              thumbnail={preview.value}
+              files={audioFiles}
+              accept={{ 'audio/*': ['*.mp3', '*.m4a', '*.wav', '*.wma'] }}
+              onDrop={handleDropMultiAudioFile}
+              onRemove={handleRemoveAudioFile}
+              onRemoveAll={handleRemoveAllFiles}
+            />
+
+          </Stack>
+
+          <Stack direction="row" justifyContent="flex-end" spacing={2}>
+            <Button
+              variant="outlined"
+              color="error"
+              onClick={() => router.push(paths.dashboard.product.root)}
+            >
+              Cancel
+            </Button>
+
+            <LoadingButton
+              fullWidth
+              size="large"
+              type="submit"
+              color="success"
+              variant="contained"
+              loading={isSubmitting}
+              startIcon={<Iconify icon="eva:cloud-upload-fill" />}
+            >
+              Upload
+            </LoadingButton>
+          </Stack>
+        </Stack>
+      </Card>
+    </Grid>
+  );
 
   const renderProduct = product && (
     <>
       <ProductDetailsToolbar
-        backLink={paths.dashboard.product.root}
-        editLink={paths.dashboard.product.edit(`${product?.id}`)}
+        backLink={paths.dashboard.admin.product.root}
+        editLink={paths.dashboard.admin.product.edit(`${product?.id}`)}
         liveLink={paths.product.details(`${product?.id}`)}
         publish={publish || ''}
         onChangePublish={handleChangePublish}
         publishOptions={PRODUCT_PUBLISH_OPTIONS}
       />
-
-      <Grid container spacing={{ xs: 3, md: 5, lg: 8 }}>
-        <Grid xs={12} md={6} lg={7}>
-          <ProductDetailsCarousel product={product} />
+      <FormProvider methods={methods} onSubmit={onSubmit}>
+        <Grid container spacing={3}>
+          {renderDetails}
         </Grid>
-
+      </FormProvider>
+      {/* <Grid container spacing={{ xs: 3, md: 5, lg: 8 }}>
         <Grid xs={12} md={6} lg={5}>
-          <ProductDetailsSummary disabledActions product={product} />
+          <Card>
+            <ProductDetailsDescription description={product?.name} />
+          </Card>
+          <Card>
+            <ProductDetailsDescription description={product?.description} />
+          </Card>
+          <Card>
+            <ProductDetailsDescription description={product?.price} />
+          </Card>
+          <Card>
+          </Card>
+          <Card>
+            <ProductDetailsDescription description={product?.pdfFileName} />
+          </Card>
+          <Card>
+          </Card>
         </Grid>
-      </Grid>
+      </Grid> */}
 
-      <Box
+      {/* <Box
         gap={5}
         display="grid"
         gridTemplateColumns={{
@@ -141,44 +365,8 @@ export default function ProductDetailsView({ id }: Props) {
             </Typography>
           </Box>
         ))}
-      </Box>
+      </Box> */}
 
-      <Card>
-        <Tabs
-          value={currentTab}
-          onChange={handleChangeTab}
-          sx={{
-            px: 3,
-            boxShadow: (theme) => `inset 0 -2px 0 0 ${alpha(theme.palette.grey[500], 0.08)}`,
-          }}
-        >
-          {[
-            {
-              value: 'description',
-              label: 'Description',
-            },
-            {
-              value: 'reviews',
-              label: `Reviews (${product.reviews.length})`,
-            },
-          ].map((tab) => (
-            <Tab key={tab.value} value={tab.value} label={tab.label} />
-          ))}
-        </Tabs>
-
-        {currentTab === 'description' && (
-          <ProductDetailsDescription description={product?.description} />
-        )}
-
-        {currentTab === 'reviews' && (
-          <ProductDetailsReview
-            ratings={product.ratings}
-            reviews={product.reviews}
-            totalRatings={product.totalRatings}
-            totalReviews={product.totalReviews}
-          />
-        )}
-      </Card>
     </>
   );
 

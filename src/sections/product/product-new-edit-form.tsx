@@ -48,8 +48,8 @@ export default function ProductNewEditForm() {
 
   const NewProductSchema = Yup.object().shape({
     name: Yup.string().required('Name is required'),
+    price: Yup.number().required('Price is required'),
     description: Yup.string().required('Description is required'),
-    // pdf: Yup.mixed().required((value) => value instanceof File),
     pdf: Yup.mixed()
       .nullable()
       .test('file', 'PDF is required', (value) => value instanceof File),
@@ -62,6 +62,7 @@ export default function ProductNewEditForm() {
 
   type FormValues = {
     name: string;
+    price: number;
     description: string;
     pdf: File | null;
     audio: File | null;
@@ -70,6 +71,7 @@ export default function ProductNewEditForm() {
     resolver: yupResolver(NewProductSchema as any),
     defaultValues: {
       name: '',
+      price: 0,
       description: '',
       pdf: null,
       audio: null,
@@ -114,22 +116,6 @@ export default function ProductNewEditForm() {
     [audioFiles, setValue]
   );
 
-
-
-  // const handleRemoveAudioFile = (inputFile: File | string) => {
-  //   const filesFiltered = audioFiles.filter((fileFiltered) => fileFiltered !== inputFile);
-  //   setAudioFiles(filesFiltered);
-  // };
-  // const handleRemovePDFFile = (inputFile: File | string) => {
-  //   setPDFFile([]);
-  // };
-
-  // const handleRemoveAllFiles = () => {
-  //   setAudioFiles([]);
-  // };
-
-
-
   const handleRemovePDFFile = () => {
     setPDFFile([]);
     setValue('pdf', null, { shouldValidate: true });
@@ -163,6 +149,7 @@ export default function ProductNewEditForm() {
         }
       });
       formData.append('name', data.name);
+      formData.append('price', data.price.toString());
       formData.append('description', data.description);
       const filename: any = await axios.post(`${HOST_API}${endpoints.filename}`, { name: data.name });
       console.log(filename)
@@ -171,9 +158,8 @@ export default function ProductNewEditForm() {
         enqueueSnackbar(response.data.message, { variant: 'success' });
       }
       else {
-        // enqueueSnackbar(filename.response.data.message, { variant: 'success' });
       }
-      router.push(paths.dashboard.product.root);
+      router.push(paths.dashboard.admin.product.root);
     } catch (error) {
       console.error('Upload error:', error);
       enqueueSnackbar(error.response.data.message, { variant: 'error' });
@@ -184,7 +170,16 @@ export default function ProductNewEditForm() {
     <Grid xs={12} md={8}>
       <Card>
         <Stack spacing={3} sx={{ p: 3 }}>
-          <RHFTextField name="name" label="Product Name" />
+
+          <Stack spacing={1.5}>
+            <Typography variant="subtitle2">Name</Typography>
+            <RHFTextField name="name" label="" />
+          </Stack>
+
+          <Stack spacing={1.5}>
+            <Typography variant="subtitle2">Price</Typography>
+            <RHFTextField name="price" label="" type='number' />
+          </Stack>
 
           <Stack spacing={1.5}>
             <Typography variant="subtitle2">Content</Typography>
@@ -193,31 +188,29 @@ export default function ProductNewEditForm() {
 
           <Stack spacing={1.5}>
             <Typography variant="subtitle2">PDF</Typography>
-            <CardContent>
-              <Upload
-                multiple={true}
-                thumbnail={preview.value}
-                files={pdfFile}
-                accept={{ 'application/pdf': [] }}
-                onDrop={handleDropPDFFile}
-                onRemove={handleRemovePDFFile}
-              />
-            </CardContent>
+
+            <Upload
+              multiple={true}
+              thumbnail={preview.value}
+              files={pdfFile}
+              accept={{ 'application/pdf': [] }}
+              onDrop={handleDropPDFFile}
+              onRemove={handleRemovePDFFile}
+            />
           </Stack>
 
           <Stack spacing={1.5}>
             <Typography variant="subtitle2">Audio</Typography>
-            <CardContent>
-              <Upload
-                multiple
-                thumbnail={preview.value}
-                files={audioFiles}
-                accept={{ 'audio/*': ['*.mp3', '*.m4a', '*.wav', '*.wma'] }}
-                onDrop={handleDropMultiAudioFile}
-                onRemove={handleRemoveAudioFile}
-                onRemoveAll={handleRemoveAllFiles}
-              />
-            </CardContent>
+            <Upload
+              multiple
+              thumbnail={preview.value}
+              files={audioFiles}
+              accept={{ 'audio/*': ['*.mp3', '*.m4a', '*.wav', '*.wma'] }}
+              onDrop={handleDropMultiAudioFile}
+              onRemove={handleRemoveAudioFile}
+              onRemoveAll={handleRemoveAllFiles}
+            />
+
           </Stack>
 
           <Stack direction="row" justifyContent="flex-end" spacing={2}>

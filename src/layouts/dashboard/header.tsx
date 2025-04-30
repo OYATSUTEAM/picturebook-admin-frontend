@@ -20,6 +20,7 @@ import AccountPopover from '../common/account-popover';
 import ContactsPopover from '../common/contacts-popover';
 import LanguagePopover from '../common/language-popover';
 import NotificationsPopover from '../common/notifications-popover';
+import { useAuthContext } from 'src/auth/hooks';
 
 // ----------------------------------------------------------------------
 
@@ -31,6 +32,7 @@ export default function Header({ onOpenNav }: Props) {
   const theme = useTheme();
 
   const settings = useSettingsContext();
+
 
   const isNavHorizontal = settings.themeLayout === 'horizontal';
 
