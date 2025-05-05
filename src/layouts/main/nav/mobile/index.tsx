@@ -11,12 +11,13 @@ import Scrollbar from 'src/components/scrollbar';
 
 import NavList from './nav-list';
 import { NavProps } from '../types';
+import LoginButton from 'src/layouts/common/login-button';
+import RegisterButton from 'src/layouts/common/register-button';
 
 // ----------------------------------------------------------------------
 
 export default function NavMobile({ data }: NavProps) {
   const pathname = usePathname();
-
   const [openMenu, setOpenMenu] = useState(false);
 
   useEffect(() => {
@@ -56,6 +57,7 @@ export default function NavMobile({ data }: NavProps) {
           {data.map((list) => (
             <NavList key={list.title} data={list} />
           ))}
+
         </Scrollbar>
       </Drawer>
     </>

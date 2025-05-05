@@ -110,17 +110,13 @@ export type IUserItem = {
 };
 
 export type IUserAccount = {
+  id: string;
+  name: string;
   email: string;
-  isPublic: boolean;
+  role: string;
   displayName: string;
-  city: string | null;
-  state: string | null;
-  about: string | null;
-  country: string | null;
-  address: string | null;
-  zipCode: string | null;
-  phoneNumber: string | null;
-  photoURL: CustomFile | string | null;
+  purchased: string[] | null;
+  status: string;
 };
 
 export type IUserAccountBillingHistory = {

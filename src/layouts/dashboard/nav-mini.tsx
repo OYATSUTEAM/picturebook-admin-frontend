@@ -9,8 +9,9 @@ import Logo from 'src/components/logo';
 import { NavSectionMini } from 'src/components/nav-section';
 
 import { NAV } from '../config-layout';
-import { useAdminNavData } from './config-navigation';
+// import { useAdminNavData } from './config-navigation';
 import NavToggleButton from '../common/nav-toggle-button';
+import { adminNavData } from './config-navigation';
 
 // ----------------------------------------------------------------------
 
@@ -18,7 +19,7 @@ export default function NavMini() {
   const { user } = useMockedUser();
 console.log('this is user ')
   // const navData = useNavData();
-  const navData = useAdminNavData();
+  const navData = adminNavData;
 
   return (
     <Box

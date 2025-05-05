@@ -15,7 +15,7 @@ import { NavSectionVertical } from 'src/components/nav-section';
 
 import { NAV } from '../config-layout';
 import NavUpgrade from '../common/nav-upgrade';
-import { useAdminNavData, useUserNavData } from './config-navigation';
+import { adminNavData,  userNavData } from './config-navigation';
 import NavToggleButton from '../common/nav-toggle-button';
 import { useAuthContext } from 'src/auth/hooks';
 
@@ -27,14 +27,13 @@ type Props = {
 };
 
 export default function NavVertical({ openNav, onCloseNav }: Props) {
-  // const { user } = useMockedUser();
   const pathname = usePathname();
-  console.log(pathname)
   const { user } = useAuthContext();
   const lgUp = useResponsive('up', 'lg');
-  const adminNavData = useAdminNavData();
-  const userNavData = useUserNavData();
+  // const adminNavData = useAdminNavData();
+  // const userNavData = useUserNavData();
   const [navData, setNavData] = useState(adminNavData);
+  // const [navData, setNavData] = useState(userNavData);
   useEffect(() => {
     if (user) {
       setNavData(user.role === 'admin' ? adminNavData : userNavData);
@@ -62,9 +61,9 @@ export default function NavVertical({ openNav, onCloseNav }: Props) {
 
       <NavSectionVertical
         data={navData}
-        slotProps={{
-          currentRole: user?.role || 'user',
-        }}
+        // slotProps={{
+        //   currentRole: user?.role || 'user',
+        // }}
       />
 
       <Box sx={{ flexGrow: 1 }} />

@@ -35,20 +35,30 @@ function Container({ children }: Props) {
   const router = useRouter();
 
   const { authenticated, method } = useAuthContext();
+
+  console.log(method)
   const [checked, setChecked] = useState(false);
 
   const check = useCallback(() => {
     if (!authenticated) {
+
       const searchParams = new URLSearchParams({
+
         returnTo: window.location.pathname,
+
       }).toString();
 
       const loginPath = loginPaths[method];
 
+
       const href = `${loginPath}?${searchParams}`;
 
-      router.replace(href);
+      router.replace(paths.auth.login);
+
     } else {
+
+      // router.replace(href);
+
       setChecked(true);
     }
   }, [authenticated, method, router]);

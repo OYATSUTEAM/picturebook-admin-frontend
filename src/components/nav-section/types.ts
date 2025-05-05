@@ -51,15 +51,34 @@ export type NavSubListProps = {
 };
 
 export type NavGroupProps = {
-  subheader?: string;
-  items: NavItemBaseProps[];
+  // subheader?: string;
+  // items: NavItemBaseProps[];
+  title: string;
+  path: string;
+  icon: React.ReactElement | undefined;
   slotProps?: SlotProps;
 };
 
 export type NavProps = StackProps & {
   data: {
-    subheader: string;
-    items: NavItemBaseProps[];
+    title: string;
+    path: string;
+    icon: React.ReactElement | undefined;
+    // items: NavItemBaseProps[];
   }[];
   slotProps?: SlotProps;
+};
+export type NavPropsMobile =  {
+  data: {
+    title: string;
+    path: string;
+    icon?: React.ReactElement;
+    children?: {
+      subheader: string;
+      items: {
+        title: string;
+        path: string;
+      }[];
+    }[];
+  }[]
 };

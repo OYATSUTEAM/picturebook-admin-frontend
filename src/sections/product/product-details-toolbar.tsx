@@ -66,11 +66,11 @@ export default function ProductDetailsToolbar({
           </Tooltip>
         )} */}
 
-        <Tooltip title="Edit">
+        {/* <Tooltip title="Edit">
           <IconButton component={RouterLink} href={editLink}>
             <Iconify icon="solar:pen-bold" />
           </IconButton>
-        </Tooltip>
+        </Tooltip> */}
 
         <LoadingButton
           color={publish == 'published' ? 'success' : 'error'}
@@ -101,7 +101,7 @@ export default function ProductDetailsToolbar({
             }}
           >
             {option.value === 'published' && <Iconify icon="eva:cloud-upload-fill" />}
-            {option.value === 'draft' && <Iconify icon="solar:file-text-bold" />}
+            {option.value === 'draft' && <Iconify icon="ant-design:stop-filled" />}
             {option.label}
           </MenuItem>
         ))}

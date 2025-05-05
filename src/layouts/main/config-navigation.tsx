@@ -6,6 +6,19 @@ import Iconify from 'src/components/iconify';
 
 // ----------------------------------------------------------------------
 
+export const mobileAuthConfig = [
+  {
+    title: 'Login',
+    icon: <Iconify icon="ic:baseline-login" />,
+    path: paths.auth.login,
+  },
+  {
+    title: 'Register',
+    icon: <Iconify icon="hugeicons:registered" />,
+    path: paths.auth.register,
+  },
+];
+
 export const navConfig = [
   {
     title: 'Home',

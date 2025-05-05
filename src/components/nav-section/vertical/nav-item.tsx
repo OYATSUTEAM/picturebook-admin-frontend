@@ -219,8 +219,10 @@ const StyledNavItem = styled(ListItemButton, {
       ...(active && {
         color:
           theme.palette.mode === 'light' ? theme.palette.primary.main : theme.palette.primary.light,
+        // backgroundColor: alpha(theme.palette.primary.main, 1),
         backgroundColor: alpha(theme.palette.primary.main, 0.08),
         '&:hover': {
+          // backgroundColor: alpha(theme.palette.primary.main, 1),
           backgroundColor: alpha(theme.palette.primary.main, 0.16),
         },
       }),

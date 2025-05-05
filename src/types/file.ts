@@ -29,7 +29,7 @@ export type IFolderManager = {
   }[];
   description: string;
   audioFiles: IFileManager[] | null;
-  pdfFile: IFileManager ;
+  pdfFile: IPDFManager ;
   url: string;
   publish: string;
   price: number;
@@ -46,6 +46,20 @@ export type IFileManager = {
   size: number;
   type: string;
   url: string;
+  modifiedAt: Date | number | string;
+};
+
+
+
+export type IPDFManager = {
+  id: string;
+  name: string;
+  size: number;
+  type: string;
+  path: string;
+  url: string;
+  preview: string;
+  relativePath:string;
   modifiedAt: Date | number | string;
 };
 

@@ -79,6 +79,11 @@ export const paths = {
       newPassword: `${ROOTS.AUTH}/supabase/new-password`,
       forgotPassword: `${ROOTS.AUTH}/supabase/forgot-password`,
     },
+    login: `${ROOTS.AUTH}/login`,
+    verify: `${ROOTS.AUTH}/verify`,
+    register: `${ROOTS.AUTH}/register`,
+
+
   },
   authDemo: {
     classic: {
@@ -153,6 +158,7 @@ export const paths = {
     product: {
       root: `${ROOTS.DASHBOARD}/product`,
       new: `${ROOTS.DASHBOARD}/product/new`,
+      paid: `${ROOTS.DASHBOARD}/product/paid`,
       details: (id: string) => `${ROOTS.DASHBOARD}/product/${id}`,
       edit: (id: string) => `${ROOTS.DASHBOARD}/product/${id}/edit`,
       demo: {

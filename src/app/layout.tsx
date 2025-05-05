@@ -18,7 +18,8 @@ import { SettingsDrawer, SettingsProvider } from 'src/components/settings';
 
 import { CheckoutProvider } from 'src/sections/checkout/context';
 
-import { AuthProvider } from 'src/auth/context/firebase/auth-provider';
+import { AuthProvider } from 'src/auth/context/jwt/auth-provider';
+// import { AuthProvider } from 'src/auth/context/firebase/auth-provider';
 // import { AuthProvider } from 'src/auth/context/auth0';
 // import { AuthProvider } from 'src/auth/context/amplify';
 // import { AuthProvider } from 'src/auth/context/supabase';

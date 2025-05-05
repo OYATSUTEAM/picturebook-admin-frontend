@@ -21,10 +21,11 @@ import Label from 'src/components/label';
 import NavMobile from './nav/mobile';
 import NavDesktop from './nav/desktop';
 import { HEADER } from '../config-layout';
-import { navConfig } from './config-navigation';
+import { mobileAuthConfig, navConfig } from './config-navigation';
 import LoginButton from '../common/login-button';
 import HeaderShadow from '../common/header-shadow';
 import SettingsButton from '../common/settings-button';
+import RegisterButton from '../common/register-button';
 
 // ----------------------------------------------------------------------
 
@@ -86,23 +87,24 @@ export default function Header() {
 
           <Box sx={{ flexGrow: 1 }} />
 
-          {mdUp && <NavDesktop data={navConfig} />}
+          {/* {mdUp && <NavDesktop data={navConfig} />} */}
 
-          <Stack alignItems="center" direction={{ xs: 'row', md: 'row-reverse' }}>
+          <Stack alignItems="center" direction={{ xs: 'row', md: 'row' }}>
             {/* <Button variant="contained" target="_blank" rel="noopener" href={paths.minimalUI}>
               Purchase Now
             </Button> */}
 
             {mdUp && <LoginButton />}
+            {mdUp && <RegisterButton />}
 
-            <SettingsButton
+            {/* <SettingsButton
               sx={{
                 ml: { xs: 1, md: 0 },
                 mr: { md: 2 },
               }}
-            />
+            /> */}
 
-            {!mdUp && <NavMobile data={navConfig} />}
+            {!mdUp && <NavMobile data={mobileAuthConfig} />}
           </Stack>
         </Container>
       </Toolbar>

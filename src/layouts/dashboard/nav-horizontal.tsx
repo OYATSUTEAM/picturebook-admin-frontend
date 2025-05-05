@@ -12,8 +12,9 @@ import Scrollbar from 'src/components/scrollbar';
 import { NavSectionHorizontal } from 'src/components/nav-section';
 
 import { HEADER } from '../config-layout';
-import { useAdminNavData } from './config-navigation';
+// import { useAdminNavData } from './config-navigation';
 import HeaderShadow from '../common/header-shadow';
+import { adminNavData } from './config-navigation';
 
 // ----------------------------------------------------------------------
 
@@ -22,7 +23,7 @@ function NavHorizontal() {
 
   const { user } = useMockedUser();
 
-  const navData = useAdminNavData();
+  // const navData = useAdminNavData();
 console.log('this is user')
   return (
     <AppBar
@@ -46,7 +47,7 @@ console.log('this is user')
           }}
         >
           <NavSectionHorizontal
-            data={navData}
+            data={adminNavData}
             slotProps={{
               currentRole: user?.role,
             }}

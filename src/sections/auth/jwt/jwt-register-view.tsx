@@ -41,17 +41,18 @@ export default function JwtRegisterView() {
   const password = useBoolean();
 
   const RegisterSchema = Yup.object().shape({
-    firstName: Yup.string().required('First name required'),
-    lastName: Yup.string().required('Last name required'),
+    name: Yup.string().required('First name required'),
+    // lastName: Yup.string().required('Last name required'),
     email: Yup.string().required('Email is required').email('Email must be a valid email address'),
     password: Yup.string().required('Password is required'),
+    passwordConfirm: Yup.string().required('Password Confirm is required'),
   });
 
   const defaultValues = {
-    firstName: '',
-    lastName: '',
+    name: '',
     email: '',
     password: '',
+    passwordConfirm: '',
   };
 
   const methods = useForm({
@@ -67,7 +68,8 @@ export default function JwtRegisterView() {
 
   const onSubmit = handleSubmit(async (data) => {
     try {
-      await register?.(data.email, data.password, data.firstName, data.lastName);
+      console.log(data.email, data.password, data.passwordConfirm, data.name)
+      await register?.(data.email, data.password, data.passwordConfirm, data.name);
 
       router.push(returnTo || PATH_AFTER_LOGIN);
     } catch (error) {
@@ -84,7 +86,7 @@ export default function JwtRegisterView() {
       <Stack direction="row" spacing={0.5}>
         <Typography variant="body2"> Already have an account? </Typography>
 
-        <Link href={paths.auth.jwt.login} component={RouterLink} variant="subtitle2">
+        <Link href={paths.auth.login} component={RouterLink} variant="subtitle2">
           Sign in
         </Link>
       </Stack>
@@ -116,8 +118,8 @@ export default function JwtRegisterView() {
   const renderForm = (
     <Stack spacing={2.5}>
       <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
-        <RHFTextField name="firstName" label="First name" />
-        <RHFTextField name="lastName" label="Last name" />
+        {/* <RHFTextField name="firstName" label="First name" /> */}
+        <RHFTextField name="name" label="Name" />
       </Stack>
 
       <RHFTextField name="email" label="Email address" />
@@ -125,6 +127,21 @@ export default function JwtRegisterView() {
       <RHFTextField
         name="password"
         label="Password"
+        type={password.value ? 'text' : 'password'}
+        InputProps={{
+          endAdornment: (
+            <InputAdornment position="end">
+              <IconButton onClick={password.onToggle} edge="end">
+                <Iconify icon={password.value ? 'solar:eye-bold' : 'solar:eye-closed-bold'} />
+              </IconButton>
+            </InputAdornment>
+          ),
+        }}
+      />
+
+      <RHFTextField
+        name="passwordConfirm"
+        label="Password Confirm"
         type={password.value ? 'text' : 'password'}
         InputProps={{
           endAdornment: (

@@ -26,7 +26,7 @@ export default function FileThumbnail({
   imgSx,
 }: FileIconProps) {
   const { name = '', path = '', preview = '' } = fileData(file);
-
+console.log(name, 'this is name of filethumb')
   const format = fileFormat(path || preview);
 
   const renderContent =

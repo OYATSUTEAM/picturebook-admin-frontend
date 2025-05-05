@@ -1,6 +1,8 @@
 import { useState, useCallback } from 'react';
 
 import Box from '@mui/material/Box';
+import { m, AnimatePresence } from 'framer-motion';
+
 import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
@@ -19,12 +21,12 @@ import { fDateTime } from 'src/utils/format-time';
 
 import Iconify from 'src/components/iconify';
 import Scrollbar from 'src/components/scrollbar';
-import FileThumbnail, { fileFormat } from 'src/components/file-thumbnail';
+import FileThumbnail, { fileFormat, fileData, fileThumb } from 'src/components/file-thumbnail';
 
 import { IFile } from 'src/types/file';
 
 import FileManagerShareDialog from './file-manager-share-dialog';
-import FileManagerInvitedItem from './file-manager-invited-item';
+import { varFade } from '../../components/animate';
 
 // ----------------------------------------------------------------------
 
@@ -50,8 +52,8 @@ export default function FileManagerFileDetails({
   onDelete,
   ...other
 }: Props) {
-  const { name, size, url, type, shared, modifiedAt } = item;
-
+  const { name, size, url, shared, modifiedAt, pdfFile, audioFiles, publish } = item;
+  console.log(item, 'this is detail ')
   const hasShared = shared && !!shared.length;
 
   const toggleTags = useBoolean(true);
@@ -62,6 +64,7 @@ export default function FileManagerFileDetails({
 
   const [inviteEmail, setInviteEmail] = useState('');
 
+  // const { key, pdfname = '', pdfsize = 0 } = fileData(file);
   // const [tags, setTags] = useState(item.tags.slice(0, 3));
 
   const handleChangeInvite = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
@@ -87,63 +90,29 @@ export default function FileManagerFileDetails({
           />
         </IconButton>
       </Stack>
-{/* 
-      {toggleTags.value && (
-        <Autocomplete
-          multiple
-          freeSolo
-          // options={item.tags.map((option) => option)}
-          // getOptionLabel={(option) => option}
-          // defaultValue={item.tags.slice(0, 3)}
-          // value={tags}
-          onChange={(event, newValue) => {
-            // handleChangeTags(newValue);
-          }}
-          renderOption={(props, option) => (
-            <li {...props} key={option}>
-              {option}
-            </li>
-          )}
-          renderTags={(selected, getTagProps) =>
-            selected.map((option, index) => (
-              <Chip
-                {...getTagProps({ index })}
-                size="small"
-                variant="soft"
-                label={option}
-                key={option}
-              />
-            ))
-          }
-          renderInput={(params) => <TextField {...params} placeholder="#Add a tags" />}
-        />
-      )} */}
+
     </Stack>
   );
 
   const renderProperties = (
     <Stack spacing={1.5}>
-      <Stack
-        direction="row"
-        alignItems="center"
-        justifyContent="space-between"
-        sx={{ typography: 'subtitle2' }}
-      >
-        Properties
-        <IconButton size="small" onClick={properties.onToggle}>
-          <Iconify
-            icon={properties.value ? 'eva:arrow-ios-upward-fill' : 'eva:arrow-ios-downward-fill'}
-          />
-        </IconButton>
-      </Stack>
 
+      <Typography variant="h6"> Info </Typography>
+      
       {properties.value && (
         <>
           <Stack direction="row" sx={{ typography: 'caption', textTransform: 'capitalize' }}>
             <Box component="span" sx={{ width: 80, color: 'text.secondary', mr: 2 }}>
+              Name
+            </Box>
+            {name}
+          </Stack>
+
+          <Stack direction="row" sx={{ typography: 'caption', textTransform: 'capitalize' }}>
+            <Box component="span" sx={{ width: 80, color: 'text.secondary', mr: 2 }}>
               Size
             </Box>
-            {fData(size)}
+            {`${size} Mb`}
           </Stack>
 
           <Stack direction="row" sx={{ typography: 'caption', textTransform: 'capitalize' }}>
@@ -155,48 +124,92 @@ export default function FileManagerFileDetails({
 
           <Stack direction="row" sx={{ typography: 'caption', textTransform: 'capitalize' }}>
             <Box component="span" sx={{ width: 80, color: 'text.secondary', mr: 2 }}>
-              Type
+              Publish
             </Box>
-            {fileFormat(type)}
+            <Chip color={publish == 'published' ? 'success' : 'error'} label={publish == 'published' ? 'publish' : 'draft'} size="small" variant="soft" />
+
+            {/* {publish} */}
           </Stack>
         </>
       )}
     </Stack>
   );
 
-  const renderShared = (
+  const renderPDF = (
     <>
-      <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ p: 2.5 }}>
-        <Typography variant="subtitle2"> File Share With </Typography>
+      <Stack
+        key={'pdfkey'}
+        component={m.div}
+        {...varFade().inUp}
+        alignItems="center"
+        display="flex"
+        flexDirection={'row'}
+        justifyContent="space-between"
+        sx={{
+          // m: 0.5,
+          width: 'inherit',
+          height: 60,
+          padding: '0 20px',
+          borderRadius: 1.25,
+          overflow: 'hidden',
+          position: 'relative',
+          border: (theme) => `solid 1px ${theme.palette.grey[500]}`,
+        }}
+      >
+        <div>
 
-        <IconButton
-          size="small"
-          color="primary"
-          onClick={share.onTrue}
-          sx={{
-            width: 24,
-            height: 24,
-            bgcolor: 'primary.main',
-            color: 'primary.contrastText',
-            '&:hover': {
-              bgcolor: 'primary.dark',
-            },
-          }}
-        >
-          <Iconify icon="mingcute:add-line" />
-        </IconButton>
+          <Box
+            component="img"
+            src={fileThumb('pdf')}
+            sx={{
+              width: 32,
+              height: 32,
+              flexShrink: 0,
+            }}
+          />
+          <span >  {pdfFile.name}  </span>
+        </div>
+        <span>  {`${pdfFile.size}Mb`}  </span>
       </Stack>
 
-      {hasShared && (
-        <Box sx={{ pl: 2.5, pr: 1 }}>
-          {shared.map((person) => (
-            <FileManagerInvitedItem key={person.id} person={person} />
-          ))}
-        </Box>
-      )}
+
     </>
   );
-
+  const renderAudios = audioFiles?.map((audio, index) => (
+    <Stack
+      key={`key${index}`}
+      component={m.div}
+      {...varFade().inUp}
+      alignItems="center"
+      display="flex"
+      flexDirection={'row'}
+      justifyContent="space-between"
+      sx={{
+        // m: 0.5,
+        width: 'inherit',
+        height: 60,
+        padding: '0 20px',
+        borderRadius: 1.25,
+        overflow: 'hidden',
+        position: 'relative',
+        border: (theme) => `solid 1px ${theme.palette.grey[500]}`,
+      }}
+    >
+      <div>
+        <Box
+          component="img"
+          src={fileThumb('audio')}
+          sx={{
+            width: 32,
+            height: 32,
+            flexShrink: 0,
+          }}
+        />
+        <span>  {audio.name}  </span>
+      </div>
+      <span>  {`${audio.size}Mb`}  </span>
+    </Stack>
+  ));
   return (
     <>
       <Drawer
@@ -207,53 +220,52 @@ export default function FileManagerFileDetails({
           backdrop: { invisible: true },
         }}
         PaperProps={{
-          sx: { width: 320 },
+          sx: { width: 520 },
         }}
         {...other}
       >
         <Scrollbar sx={{ height: 1 }}>
           <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ p: 2.5 }}>
-            <Typography variant="h6"> Info </Typography>
-
-            <Checkbox
-              color="warning"
-              icon={<Iconify icon="eva:star-outline" />}
-              checkedIcon={<Iconify icon="eva:star-fill" />}
-              checked={favorited}
-              onChange={onFavorite}
-            />
+            <Typography variant="h6">Info</Typography>
           </Stack>
 
           <Stack
-            spacing={2.5}
+            spacing={1.5}
             justifyContent="center"
             sx={{
               p: 2.5,
               bgcolor: 'background.neutral',
             }}
           >
-            <FileThumbnail
-              imageView
-              file={type === 'folder' ? type : url}
-              sx={{ width: 64, height: 64 }}
-              imgSx={{ borderRadius: 1 }}
-            />
-
-            <Typography variant="subtitle1" sx={{ wordBreak: 'break-all' }}>
-              {name}
-            </Typography>
+            <Stack
+              spacing={1.5}
+              justifyContent="space-between"
+              direction="row"
+              sx={{
+                p: 2.5,
+                bgcolor: 'background.neutral',
+              }}
+            >
+              <Typography variant="subtitle1" sx={{ wordBreak: 'break-all' }}>
+                {name}
+              </Typography>
+              <Chip 
+                color={publish === 'published' ? 'success' : 'error'} 
+                label={publish === 'published' ? 'publish' : 'draft'} 
+                size="medium" 
+                variant="soft" 
+              />
+            </Stack>
 
             <Divider sx={{ borderStyle: 'dashed' }} />
 
-            {renderTags}
-
             {renderProperties}
+            {renderPDF}
+            {renderAudios}
           </Stack>
-
-          {renderShared}
         </Scrollbar>
 
-        <Box sx={{ p: 2.5 }}>
+        {/* <Box sx={{ p: 2.5 }}>
           <Button
             fullWidth
             variant="soft"
@@ -264,12 +276,12 @@ export default function FileManagerFileDetails({
           >
             Delete
           </Button>
-        </Box>
+        </Box> */}
       </Drawer>
 
       <FileManagerShareDialog
         open={share.value}
-        shared={shared}
+        // shared={shared}
         inviteEmail={inviteEmail}
         onChangeInvite={handleChangeInvite}
         onCopyLink={onCopyLink}

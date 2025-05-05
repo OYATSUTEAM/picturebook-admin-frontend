@@ -22,7 +22,7 @@ import FormProvider, {
 } from 'src/components/hook-form';
 
 import Upload from 'src/components/upload/upload';
-import { Button, CardContent } from '@mui/material';
+import { Button, CardContent, Container } from '@mui/material';
 import { useBoolean } from 'src/hooks/use-boolean';
 import Iconify from 'src/components/iconify';
 import { HOST_API } from 'src/config-global';
@@ -33,6 +33,11 @@ import CustomBreadcrumbs from 'src/components/custom-breadcrumbs';
 import { useGetProduct } from 'src/api/product';
 import ProductNewEditForm from '../product-new-edit-form';
 import ProductDetailsDescription from '../product-details-description';
+import { RouterLink } from 'src/routes/components';
+import ProductDetailsToolbar from '../product-details-toolbar';
+import { PRODUCT_PUBLISH_OPTIONS } from 'src/_mock';
+import { useSettingsContext } from 'src/components/settings';
+import { C } from '@fullcalendar/core/internal-common';
 
 type Props = {
   id: string;
@@ -49,12 +54,13 @@ let newPdfFile = new File(
 export default function ProductEditView({ id }: Props) {
   const router = useRouter();
   const { enqueueSnackbar } = useSnackbar();
-
+  const settings = useSettingsContext();
   const preview = useBoolean();
-
   const [audioFiles, setAudioFiles] = useState<(File)[]>([]);
   const [pdfFile, setPDFFile] = useState<(File)[]>([]);
   const { product: currentProduct } = useGetProduct(id);
+  const backLink = paths.dashboard.admin.product.root;
+  const [publish, setPublish] = useState('published');
 
   type FormValues = {
     name: string;
@@ -103,46 +109,73 @@ export default function ProductEditView({ id }: Props) {
 
   useEffect(() => {
     if (currentProduct) {
+      setPublish(currentProduct?.publish);
+    }
+  }, [currentProduct]);
+
+
+  useEffect(() => {
+    if (currentProduct) {
       // Set initial form values
       methods.reset({
         name: currentProduct.name,
         price: currentProduct.price,
         description: currentProduct.description,
-        pdf: null,
-        audio: null,
+        // pdf: null,
+        // audio: null,
       });
 
       // Set PDF file if exists
       if (currentProduct.pdfFile.name) {
-        newPdfFile = {
-          ...newPdfFile,
-          name: currentProduct.pdfFile.name,
-          size: currentProduct.pdfFile.size,
-          // formattedSize: formatFileSize(currentProduct.pdfFile.size),
-        };
-        setPDFFile([newPdfFile]);
+        (async () => {
+          try {
+            const response = await fetch(currentProduct.pdfFile.url);
+            const blob = await response.blob();
+            const pdfFile = new File([blob], currentProduct.pdfFile.name, {
+              type: 'application/pdf',
+              lastModified: Date.now()
+            });
+            
+            setPDFFile([pdfFile]);
+          } catch (error) {
+            console.error('Error loading PDF file:', error);
+          }
+        })();
       }
 
-      // Set audio files if exist
       if (currentProduct.audioFiles && currentProduct.audioFiles.length > 0) {
-        const audioFiles = currentProduct.audioFiles.map((audio) => ({
-          name: audio.name,
-          preview: audio.url,
-          lastModified: Date.now(),
-          size: audio.size,
-          type: 'audio/*',
-        })) as unknown as File[];
-        setAudioFiles(audioFiles);
+        (async () => {
+          try {
+            const audioFilesPromises = currentProduct.audioFiles!.map(async (audio) => {
+              // Fetch the audio file from the URL
+              const response = await fetch(audio.url);
+              const blob = await response.blob();
+              
+              // Create a new File object with the actual file content
+              return new File([blob], audio.name, {
+                type: 'audio/*',
+                lastModified: Date.now()
+              });
+            });
+
+            // Wait for all audio files to be loaded
+            const loadedAudioFiles = await Promise.all(audioFilesPromises);
+            setAudioFiles(loadedAudioFiles);
+          } catch (error) {
+            console.error('Error loading audio files:', error);
+          }
+        })();
       }
     }
   }, [currentProduct, methods]);
 
   const handleDropPDFFile = useCallback(
-    
+
     (acceptedFiles: File[]) => {
       const newFile = acceptedFiles[0];
-    console.log(acceptedFiles)
       if (newFile) {
+
+        console.log(newFile)
         const fileWithPreview = Object.assign(newFile, {
           preview: URL.createObjectURL(newFile),
           // size: newFile.size,
@@ -158,7 +191,6 @@ export default function ProductEditView({ id }: Props) {
   const handleDropMultiAudioFile = useCallback(
     (acceptedFiles: File[]) => {
 
-      console.log(acceptedFiles)
       const newFiles = [
         ...audioFiles,
 
@@ -189,37 +221,56 @@ export default function ProductEditView({ id }: Props) {
     setAudioFiles([]);
     setValue('audio', null, { shouldValidate: true });
   };
+  const handleChangePublish = useCallback((newValue: string) => {
+    setPublish(newValue);
+  }, []);
 
   const onSubmit = handleSubmit(async (data) => {
     try {
+      // First delete existing files and directory
+      // await axios.post(`${HOST_API}${endpoints.deleteExistingFile}`, { id: currentProduct.id });
+
       const formData = new FormData();
-      if (pdfFile.length > 0) {
-        formData.append('pdf', pdfFile[0] as File);
-      }
-      audioFiles.forEach((file, index) => {
-        if (file instanceof File) {
-          formData.append(`audio_${index}`, file);
-        }
-      });
+
+      // Append basic fields
+      formData.append('id', currentProduct.id);
       formData.append('name', data.name);
       formData.append('price', data.price.toString());
       formData.append('description', data.description);
-      const filename: any = await axios.post(`${HOST_API}${endpoints.filename}`, { name: data.name });
-      if (filename.status == 200) {
-        const response = await axios.post(`${HOST_API}${endpoints.upload}`, formData);
-        enqueueSnackbar(response.data.message, { variant: 'success' });
+      formData.append('publish', publish);
+
+      // Handle PDF file
+      if (pdfFile.length > 0 && pdfFile[0] instanceof File) {
+        formData.append('pdf', pdfFile[0]);
       }
-      else {
-      }
+
+
+
+      // Handle audio files
+      audioFiles.forEach((file) => {
+        if (file instanceof File) {
+          formData.append('audio', file);
+        }
+      });
+
+      const response = await axios.post(`${HOST_API}${endpoints.update}`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+
+      enqueueSnackbar(response.data.message, { variant: 'success' });
       router.push(paths.dashboard.admin.product.root);
     } catch (error) {
       console.error('Upload error:', error);
-      enqueueSnackbar(error.response.data.message, { variant: 'error' });
+      enqueueSnackbar(error.response?.data?.message || 'Error updating product', { variant: 'error' });
     }
   });
 
   const renderDetails = (
     <Grid xs={12} md={8}>
+
+
       <Card>
         <Stack spacing={3} sx={{ p: 3 }}>
           <Stack spacing={1.5}>
@@ -266,9 +317,9 @@ export default function ProductEditView({ id }: Props) {
             <Button
               variant="outlined"
               color="error"
-              onClick={() => router.push(paths.dashboard.product.root)}
+              onClick={() => { }}
             >
-              Cancel
+              Reset
             </Button>
 
             <LoadingButton
@@ -278,9 +329,9 @@ export default function ProductEditView({ id }: Props) {
               color="success"
               variant="contained"
               loading={isSubmitting}
-              startIcon={<Iconify icon="eva:cloud-upload-fill" />}
+              startIcon={<Iconify icon="material-symbols:save" />}
             >
-              Update
+              Save
             </LoadingButton>
           </Stack>
         </Stack>
@@ -290,35 +341,38 @@ export default function ProductEditView({ id }: Props) {
 
   return (
     <>
-      <CustomBreadcrumbs
-        heading="Edit"
-        links={[
-          { name: 'Dashboard', href: paths.dashboard.root },
-          {
-            name: 'Product',
-            href: paths.dashboard.product.root,
-          },
-          { name: currentProduct?.name },
-        ]}
-        sx={{
-          mb: { xs: 3, md: 5 },
-        }}
-      />
+      <Container maxWidth={settings.themeStretch ? false : 'lg'}>
+        <CustomBreadcrumbs
+          heading="Edit"
+          links={[
+            { name: 'Dashboard', href: paths.dashboard.root },
+            {
+              name: 'Product',
+              href: paths.dashboard.admin.product.root,
+            },
+            { name: currentProduct?.name },
+          ]}
+          sx={{
+            mb: { xs: 1, md: 1 },
+          }}
+        />
 
-      <FormProvider methods={methods} onSubmit={onSubmit}>
-        <Grid container spacing={3}>
-          {renderDetails}
-        </Grid>
-      </FormProvider>
+        <ProductDetailsToolbar
+          backLink={paths.dashboard.admin.product.root}
+          editLink={paths.dashboard.admin.product.edit(`${currentProduct?.id}`)}
+          liveLink={paths.product.details(`${currentProduct?.id}`)}
+          publish={publish || ''}
+          onChangePublish={handleChangePublish}
+          publishOptions={PRODUCT_PUBLISH_OPTIONS}
+        />
+        <FormProvider methods={methods} onSubmit={onSubmit}>
+          <Grid container spacing={3}>
+            {renderDetails}
+          </Grid>
+        </FormProvider>
+      </Container>
     </>
   );
 }
 
-const formatFileSize = (bytes: number) => {
-  if (bytes === 0) return '0 Bytes';
-  const k = 1024;
-  const sizes = ['Bytes', 'KB', 'MB', 'GB'];
-  const i = Math.floor(Math.log(bytes) / Math.log(k));
-  return `${parseFloat((bytes / Math.pow(k, i)).toFixed(2))} ${sizes[i]}`;
-};
 

@@ -48,6 +48,9 @@ import {
   RenderCellCreatedAt,
 } from '../product-table-row';
 import { borderRadius } from '@mui/system';
+import axios from 'axios';
+import { HOST_API } from 'src/config-global';
+import { endpoints } from 'src/utils/axios';
 
 // ----------------------------------------------------------------------
 
@@ -124,8 +127,10 @@ export default function ProductListView() {
     [enqueueSnackbar, tableData]
   );
 
-  const handleDeleteRows = useCallback(() => {
+  const handleDeleteRows = useCallback(async () => {
     const deleteRows = tableData.filter((row) => !selectedRowIds.includes(row.id));
+    // const response = await axios.post(`${HOST_API}${endpoints.deleteExistingFile}` , {id:});
+
 
     enqueueSnackbar('Delete success!');
 

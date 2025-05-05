@@ -1,4 +1,4 @@
-import { UserListView } from 'src/sections/user/view';
+import AdminAndUserListView from 'src/sections/admin/view/admin-user-list-view';
 
 // ----------------------------------------------------------------------
 
@@ -7,5 +7,5 @@ export const metadata = {
 };
 
 export default function UserListPage() {
-  return <UserListView />;
+  return <AdminAndUserListView />;
 }

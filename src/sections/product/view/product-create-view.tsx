@@ -25,7 +25,7 @@ export default function ProductCreateView() {
           },
           {
             name: 'Product',
-            href: paths.dashboard.product.root,
+            href: paths.dashboard.admin.product.root,
           },
           { name: 'New product' },
         ]}

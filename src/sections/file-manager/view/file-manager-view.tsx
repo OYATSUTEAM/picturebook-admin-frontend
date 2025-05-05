@@ -35,6 +35,9 @@ import { paths } from 'src/routes/paths';
 import { RouterLink } from 'src/routes/components';
 import { useGetFileProducts, } from 'src/api/product';
 import { IProductItem } from 'src/types/product';
+import { endpoints } from 'src/utils/axios';
+import { HOST_API } from 'src/config-global';
+import axios from 'axios';
 
 // ----------------------------------------------------------------------
 
@@ -121,11 +124,11 @@ export default function FileManagerView() {
   }, []);
 
   const handleDeleteItem = useCallback(
-    (id: string) => {
+    async (id: string) => {
       const deleteRow = tableData.filter((row) => row.id !== id);
-
-      enqueueSnackbar('Delete success!');
-
+      console.log(id)
+      const response = await axios.post(`${HOST_API}${endpoints.deleteExistingFile}`, { id: id });
+      enqueueSnackbar(response.data.message);
       setTableData(deleteRow);
 
       table.onUpdatePageDeleteRow(dataInPage.length);

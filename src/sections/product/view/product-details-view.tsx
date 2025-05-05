@@ -41,6 +41,7 @@ import { LoadingButton } from '@mui/lab';
 import axios from 'axios';
 import { HOST_API } from 'src/config-global';
 import { endpoints } from 'src/utils/axios';
+import CustomBreadcrumbs from 'src/components/custom-breadcrumbs';
 
 // ----------------------------------------------------------------------
 
@@ -70,7 +71,7 @@ type Props = {
 
 export default function ProductDetailsView({ id }: Props) {
   const { product, productLoading, productError } = useGetProduct(id);
-  console.log(product)
+
   const settings = useSettingsContext();
 
   const [currentTab, setCurrentTab] = useState('publish');
@@ -88,8 +89,6 @@ export default function ProductDetailsView({ id }: Props) {
       setPublish(product?.publish);
     }
   }, [product]);
-
-
 
 
   const NewProductSchema = Yup.object().shape({
@@ -309,6 +308,20 @@ export default function ProductDetailsView({ id }: Props) {
 
   const renderProduct = product && (
     <>
+          <CustomBreadcrumbs
+            heading="Detail"
+            links={[
+              { name: 'Dashboard', href: paths.dashboard.root },
+              {
+                name: 'Product',
+                href: paths.dashboard.admin.product.root,
+              },
+              { name: product?.name },
+            ]}
+            sx={{
+              // mb: { xs: 3, md: 5 },
+            }}
+          />
       <ProductDetailsToolbar
         backLink={paths.dashboard.admin.product.root}
         editLink={paths.dashboard.admin.product.edit(`${product?.id}`)}

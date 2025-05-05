@@ -42,6 +42,8 @@ export const endpoints = {
   calendar: '/api/calendar',
   filename: '/api/file/filename',
   upload: '/api/file/upload',
+  update: '/api/file/update',
+  deleteExistingFile: '/api/file/deleteExistingFile',
   auth: {
     me: '/api/auth/me',
     login: '/api/auth/login',
@@ -58,12 +60,15 @@ export const endpoints = {
     latest: '/api/post/latest',
     search: '/api/post/search',
   },
-  // upload: {
-  // },
-
   product: {
     list: '/api/product/list',
     details: '/api/product/details',
     search: '/api/product/search',
   },
+  user: {
+    list: '/api/user/list',
+    details: '/api/user/details',
+    search: '/api/user/search',
+  },
+
 };

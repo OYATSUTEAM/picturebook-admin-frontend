@@ -1,4 +1,4 @@
-import { UserProfileView } from 'src/sections/user/view';
+import { AdminProfileView } from 'src/sections/admin/view';
 
 // ----------------------------------------------------------------------
 
@@ -7,5 +7,7 @@ export const metadata = {
 };
 
 export default function UserProfilePage() {
-  return <UserProfileView />;
+  return <>
+      <AdminProfileView />;
+  </>
 }

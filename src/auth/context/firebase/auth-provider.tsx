@@ -73,11 +73,12 @@ export function AuthProvider({ children }: Props) {
       onAuthStateChanged(AUTH, async (user) => {
         if (user) {
           if (user.emailVerified) {
-            const userProfile = doc(DB, 'Users', user.uid);
+            const userProfile = doc(DB, 'users', user.uid);
 
             const docSnap = await getDoc(userProfile);
 
             const profile = docSnap.data();
+
             dispatch({
               type: Types.INITIAL,
               payload: {
@@ -85,8 +86,7 @@ export function AuthProvider({ children }: Props) {
                   ...user,
                   ...profile,
                   id: user.uid,
-                  role: profile?.role,
-                  displayName:profile?.displayName
+                  role: 'admin',
                 },
               },
             });
@@ -195,7 +195,6 @@ export function AuthProvider({ children }: Props) {
   // REGISTER
   const register = useCallback(
     async (email: string, password: string, firstName: string, lastName: string) => {
-      console.log('register func is called')
       const newUser = await createUserWithEmailAndPassword(AUTH, email, password);
 
       /*
@@ -204,7 +203,7 @@ export function AuthProvider({ children }: Props) {
        */
       await sendEmailVerification(newUser.user);
 
-      const userProfile = doc(collection(DB, 'Users'), newUser.user?.uid);
+      const userProfile = doc(collection(DB, 'users'), newUser.user?.uid);
 
       await setDoc(userProfile, {
         uid: newUser.user?.uid,

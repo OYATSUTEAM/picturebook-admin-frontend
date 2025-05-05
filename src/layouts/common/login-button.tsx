@@ -4,6 +4,8 @@ import { Theme, SxProps } from '@mui/material/styles';
 import { RouterLink } from 'src/routes/components';
 
 import { PATH_AFTER_LOGIN } from 'src/config-global';
+import { endpoints } from 'src/utils/axios';
+import { paths } from 'src/routes/paths';
 
 // ----------------------------------------------------------------------
 
@@ -13,7 +15,7 @@ type Props = {
 
 export default function LoginButton({ sx }: Props) {
   return (
-    <Button component={RouterLink} href={PATH_AFTER_LOGIN} variant="outlined" sx={{ mr: 1, ...sx }}>
+    <Button component={RouterLink} href={paths.auth.login} variant="outlined" sx={{ mr: 1, ...sx }}>
       Login
     </Button>
   );

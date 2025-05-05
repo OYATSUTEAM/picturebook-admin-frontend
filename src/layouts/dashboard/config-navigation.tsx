@@ -47,117 +47,70 @@ const ICONS = {
 
 // ----------------------------------------------------------------------
 
-export function useAdminNavData() {
-  const { t } = useTranslate();
+export const adminNavData = [
+  { title: 'Dashboard', path: paths.dashboard.root, icon: <Iconify icon="material-symbols:dashboard" /> },
 
-  const data = useMemo(
-    () => [
-      // OVERVIEW
-      // ----------------------------------------------------------------------
-      // {
-      //   subheader: t('overview'),
-      //   items: [
-      //     {
-      //       title: t('app'),
-      //       path: paths.dashboard.root,
-      //       icon: ICONS.dashboard,
-      //     },
-      //     {
-      //       title: t('ecommerce'),
-      //       path: paths.dashboard.general.ecommerce,
-      //       icon: ICONS.ecommerce,
-      //     },
-      //     {
-      //       title: t('analytics'),
-      //       path: paths.dashboard.general.analytics,
-      //       icon: ICONS.analytics,
-      //     },
-      //     {
-      //       title: t('banking'),
-      //       path: paths.dashboard.general.banking,
-      //       icon: ICONS.banking,
-      //     },
-      //     {
-      //       title: t('booking'),
-      //       path: paths.dashboard.general.booking,
-      //       icon: ICONS.booking,
-      //     },
+  { title: 'Account Manage', path: paths.dashboard.admin.list, icon: <Iconify icon="mdi:account-cog" /> },
 
-      //   ],
-      // },
+  { title: 'Product Manage', path: paths.dashboard.admin.product.root, icon: <Iconify icon="simple-icons:bookstack" /> },
+]
 
-      // MANAGEMENT
-      // ----------------------------------------------------------------------
-      {
-        subheader: t('management'),
-        items: [
-          // ADMIN
-          {
-            title: t('admin'),
-            path: paths.dashboard.user.root,
-            icon: ICONS.user,
-            children: [
-              // { title: t('profile'), path: paths.dashboard.admin.root },
-              // { title: t('cards'), path: paths.dashboard.admin.cards },
-              // { title: t('list'), path: paths.dashboard.admin.list },
-              { title: t('create'), path: paths.dashboard.admin.new },
-              { title: t('edit'), path: paths.dashboard.admin.demo.edit },
-              { title: t('account'), path: paths.dashboard.admin.account },
-            ],
-          },
-
-          {
-            title: t('user'),
-            path: paths.dashboard.user.root,
-            icon: ICONS.user,
-            children: [
-              // { title: t('profile'), path: paths.dashboard.user.root },
-              // { title: t('cards'), path: paths.dashboard.user.cards },
-              { title: t('list'), path: paths.dashboard.user.list },
-              // { title: t('create'), path: paths.dashboard.user.new },
-              // { title: t('edit'), path: paths.dashboard.user.demo.edit },
-              // { title: t('account'), path: paths.dashboard.user.account },
-            ],
-          },
-
-          // PRODUCT
-          {
-            title: t('product'),
-            path: paths.dashboard.product.root,
-            icon: ICONS.product,
-            children: [
-              { title: t('list'), path: paths.dashboard.admin.product.fileManager },
-              // {
-              //   title: t('details'),
-              //   path: paths.dashboard.product.demo.details,
-              // },
-              { title: t('create'), path: paths.dashboard.admin.product.new },
-              { title: t('edit'), path: paths.dashboard.admin.product.demo.edit },
-            ],
-          },
-          // {
-          //   title: t('file'),
-          //   path: paths.dashboard.general.file,
-          //   icon: ICONS.file,
-          // },
-
-          // FILE MANAGER
-          {
-            title: t('file_manager'),
-            path: paths.dashboard.fileManager,
-            icon: ICONS.folder,
-          },
+export const userNavData =
+  [
+    {
+      title: 'Dashboard',
+      path: paths.dashboard.root,
+      icon: <Iconify icon="material-symbols:dashboard" />
+    },
+    {
+      title: 'All Products',
+      path: paths.dashboard.product.root,
+      icon: <Iconify icon="ph:books-fill" />
+    },
+    {
+      title: 'Paid Books',
+      path: paths.dashboard.product.paid,
+      icon: <Iconify icon="wpf:paid" />
+    },
+  ]
 
 
-        ],
-      },
 
-    ],
-    [t]
-  );
+// export function useAdminNavData() {
+//   const { t } = useTranslate();
+// return {
+//   [
+//     { title: t('dashboard'), path: paths.dashboard.root, icon: ICONS.user },
+//     { title: t('account manage'), path: paths.dashboard.admin.list, icon: ICONS.user },
+//     { title: t('product manage'), path: paths.dashboard.admin.product.root, icon: ICONS.user },
+//   ]
+// }
+//   const data = useMemo(
+//     () => [
 
-  return data;
-}
+//       { title: t('dashboard'), path: paths.dashboard.root, icon: ICONS.user },
+//       { title: t('account manage'), path: paths.dashboard.admin.list, icon: ICONS.user },
+//       { title: t('product manage'), path: paths.dashboard.admin.product.root, icon: ICONS.user },
+
+//     ],
+//     [t]
+//   );
+
+//   return data;
+// }
+
+export const mobileAuthConfig = [
+  {
+    title: 'Login',
+    icon: <Iconify icon="ic:baseline-login" />,
+    path: paths.auth.login,
+  },
+  {
+    title: 'Register',
+    icon: <Iconify icon="hugeicons:registered" />,
+    path: paths.auth.register,
+  },
+];
 
 
 export function useUserNavData() {
@@ -165,106 +118,16 @@ export function useUserNavData() {
 
   const data = useMemo(
     () => [
-      // OVERVIEW
-      // ----------------------------------------------------------------------
-      // {
-      //   subheader: t('overview'),
-      //   items: [
-      //     {
-      //       title: t('app'),
-      //       path: paths.dashboard.root,
-      //       icon: ICONS.dashboard,
-      //     },
-      //     {
-      //       title: t('ecommerce'),
-      //       path: paths.dashboard.general.ecommerce,
-      //       icon: ICONS.ecommerce,
-      //     },
-      //     {
-      //       title: t('analytics'),
-      //       path: paths.dashboard.general.analytics,
-      //       icon: ICONS.analytics,
-      //     },
-      //     {
-      //       title: t('banking'),
-      //       path: paths.dashboard.general.banking,
-      //       icon: ICONS.banking,
-      //     },
-      //     {
-      //       title: t('booking'),
-      //       path: paths.dashboard.general.booking,
-      //       icon: ICONS.booking,
-      //     },
-
-      //   ],
-      // },
-
-      // MANAGEMENT
-      // ----------------------------------------------------------------------
       {
-        subheader: t('management'),
-        items: [
-          // ADMIN
-          // {
-          //   title: t('admin'),
-          //   path: paths.dashboard.user.root,
-          //   icon: ICONS.user,
-          //   children: [
-          //     // { title: t('profile'), path: paths.dashboard.admin.root },
-          //     // { title: t('cards'), path: paths.dashboard.admin.cards },
-          //     // { title: t('list'), path: paths.dashboard.admin.list },
-          //     { title: t('create'), path: paths.dashboard.admin.new },
-          //     { title: t('edit'), path: paths.dashboard.admin.demo.edit },
-          //     { title: t('account'), path: paths.dashboard.admin.account },
-          //   ],
-          // },
-
-          {
-            title: t('user'),
-            path: paths.dashboard.user.root,
-            icon: ICONS.user,
-            children: [
-              // { title: t('profile'), path: paths.dashboard.user.root },
-              // { title: t('cards'), path: paths.dashboard.user.cards },
-              { title: t('list'), path: paths.dashboard.user.list },
-              // { title: t('create'), path: paths.dashboard.user.new },
-              // { title: t('edit'), path: paths.dashboard.user.demo.edit },
-              // { title: t('account'), path: paths.dashboard.user.account },
-            ],
-          },
-
-          // PRODUCT
-          {
-            title: t('product'),
-            path: paths.dashboard.product.root,
-            icon: ICONS.product,
-            children: [
-              { title: t('list'), path: paths.dashboard.product.root },
-              // {
-              //   title: t('details'),
-              //   path: paths.dashboard.product.demo.details,
-              // },
-              { title: t('create'), path: paths.dashboard.product.new },
-              { title: t('edit'), path: paths.dashboard.product.demo.edit },
-            ],
-          },
-          // {
-          //   title: t('file'),
-          //   path: paths.dashboard.general.file,
-          //   icon: ICONS.file,
-          // },
-
-          // FILE MANAGER
-          {
-            title: t('file_manager'),
-            path: paths.dashboard.fileManager,
-            icon: ICONS.folder,
-          },
-
-
-        ],
+        title: t('all products'),
+        path: paths.dashboard.product.root,
+        icon: ICONS.product,
       },
-
+      {
+        title: t('paid books'),
+        path: paths.dashboard.product.root,
+        icon: ICONS.product,
+      },
     ],
     [t]
   );

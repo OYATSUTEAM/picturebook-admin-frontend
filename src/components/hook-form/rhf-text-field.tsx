@@ -21,8 +21,12 @@ export default function RHFTextField({ name, helperText, type, ...other }: Props
           fullWidth
           type={type}
           value={field.value}
+          onFocus={(e) => {
+            if (type === 'number' && field.value === 0) {
+              field.onChange('');
+            }
+          }}
           onChange={(event) => {
-            console.log(event.target.value)
             if (type === 'number') {
               const value = event.target.value === '' ? 0 : Number(event.target.value);
               field.onChange(value);

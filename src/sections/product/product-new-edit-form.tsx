@@ -30,6 +30,7 @@ import { HOST_API } from 'src/config-global';
 import { useAuthContext } from 'src/auth/hooks';
 import axios from 'axios';
 import { endpoints } from 'src/utils/axios';
+import { createNewProduct } from 'src/api/product';
 
 
 
@@ -44,7 +45,6 @@ export default function ProductNewEditForm() {
 
   const [audioFiles, setAudioFiles] = useState<(File)[]>([]);
   const [pdfFile, setPDFFile] = useState<(File)[]>([]);
-
 
   const NewProductSchema = Yup.object().shape({
     name: Yup.string().required('Name is required'),
@@ -133,10 +133,6 @@ export default function ProductNewEditForm() {
   };
 
 
-
-
-
-
   const onSubmit = handleSubmit(async (data) => {
     try {
       const formData = new FormData();
@@ -148,21 +144,24 @@ export default function ProductNewEditForm() {
           formData.append(`audio_${index}`, file);
         }
       });
+
       formData.append('name', data.name);
       formData.append('price', data.price.toString());
       formData.append('description', data.description);
+      
       const filename: any = await axios.post(`${HOST_API}${endpoints.filename}`, { name: data.name });
-      console.log(filename)
-      if (filename.status == 200) {
-        const response = await axios.post(`${HOST_API}${endpoints.upload}`, formData);
-        enqueueSnackbar(response.data.message, { variant: 'success' });
+      if (filename.status === 200) {
+        const result = await createNewProduct(formData);
+        if (result.status === 200) {
+          enqueueSnackbar('Product created successfully', { variant: 'success' });
+          router.push(paths.dashboard.admin.product.root);
+        }
+      } else {
+        enqueueSnackbar('Product name already exists', { variant: 'error' });
       }
-      else {
-      }
-      router.push(paths.dashboard.admin.product.root);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Upload error:', error);
-      enqueueSnackbar(error.response.data.message, { variant: 'error' });
+      enqueueSnackbar(error.response?.data?.message || 'An error occurred', { variant: 'error' });
     }
   });
 
@@ -187,7 +186,7 @@ export default function ProductNewEditForm() {
           </Stack>
 
           <Stack spacing={1.5}>
-            <Typography variant="subtitle2">PDF</Typography>
+            <Typography variant="subtitle2">PDF</Typography> 
 
             <Upload
               multiple={true}

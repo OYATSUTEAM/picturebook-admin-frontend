@@ -53,6 +53,7 @@ export default function FileManagerTableRow({ row, selected, onSelectRow, onDele
   // const { name, size, type, modifiedAt, shared, isFavorited } = row;
   const { name, price, size, modifiedAt, publishOptions, shared, publish, onChangePublish } = row;
 
+  console.log(size)
   const { enqueueSnackbar } = useSnackbar();
 
   const { copy } = useCopyToClipboard();
@@ -75,9 +76,7 @@ export default function FileManagerTableRow({ row, selected, onSelectRow, onDele
 
   const handleClick = useDoubleClick({
     click: () => {
-      // details.onTrue();
-
-
+      details.onTrue();
     },
     doubleClick: () => console.info('DOUBLE CLICK'),
   });
@@ -138,35 +137,36 @@ export default function FileManagerTableRow({ row, selected, onSelectRow, onDele
         </TableCell>
 
         <TableCell onClick={handleClick}>
-          <Link component={RouterLink} href={paths.dashboard.admin.product.details(row.id)} variant="subtitle2">
-            <Stack direction="row" alignItems="center" spacing={2}>
-              <FileThumbnail file={'folder'} sx={{ width: 36, height: 36 }} />
-              <Typography
-                noWrap
-                variant="inherit"
-                sx={{
-                  maxWidth: 360,
-                  cursor: 'pointer',
-                  ...(details.value && { fontWeight: 'fontWeightBold' }),
-                }}
-              >
-                {name}
-              </Typography>
-            </Stack>
-          </Link>
+          {/* <Link component={RouterLink} href={paths.dashboard.admin.product.edit(row.id)} variant="subtitle2"> */}
+          <Stack direction="row" alignItems="center" spacing={2}>
+            <FileThumbnail file={'folder'} sx={{ width: 36, height: 36 }} />
+            <Typography
+              noWrap
+              variant="inherit"
+              sx={{
+                maxWidth: 360,
+                cursor: 'pointer',
+                ...(details.value && { fontWeight: 'fontWeightBold' }),
+              }}
+            >
+              {name}
+            </Typography>
+          </Stack>
+          {/* </Link> */}
 
         </TableCell>
 
-        <TableCell align="center" onClick={handleClick} sx={{ whiteSpace: 'nowrap' }}>
+        <TableCell align="center" onClick={()=>{}} sx={{ whiteSpace: 'nowrap' }}>
           {/* {price == 0 ? 'free' : price} */}
-          <Chip color={price !== 0 ? 'success' : 'error'} label={price == 0 ? 'free' : price} size="small" variant="soft" />
+          <Chip color={price !== 0 ? 'success' : 'error'} label={price == 0 ? 'free' : `${price} 円 `} size="medium" variant="soft" />
         </TableCell>
 
-        <TableCell align="center" onClick={handleClick} sx={{ whiteSpace: 'nowrap' }}>
-          {fData(size)}
+        <TableCell align="center" onClick={()=>{}} sx={{ whiteSpace: 'nowrap' }}>
+          {/* {fData(size)} */}
+          {size} Mb
         </TableCell>
 
-        <TableCell align="center" onClick={handleClick} sx={{ whiteSpace: 'nowrap' }}>
+        <TableCell align="center" onClick={()=>{}} sx={{ whiteSpace: 'nowrap' }}>
           <ListItemText
             primary={fDate(modifiedAt)}
             secondary={fTime(modifiedAt)}
@@ -178,13 +178,13 @@ export default function FileManagerTableRow({ row, selected, onSelectRow, onDele
             }}
           />
         </TableCell>
-        <TableCell align="center" onClick={handleClick}>
+        <TableCell align="center" onClick={()=>{}}>
           {shared.length}
         </TableCell>
 
-        <TableCell align="center" onClick={handleClick} sx={{ whiteSpace: 'nowrap' }}>
+        <TableCell align="center" onClick={()=>{}} sx={{ whiteSpace: 'nowrap' }}>
 
-          <Chip color={publish == 'published' ? 'success' : 'error'} label={publish} size="small" variant="soft" />
+          <Chip color={publish == 'published' ? 'success' : 'error'} label={publish} size="medium" variant="soft" />
 
         </TableCell>
 
@@ -195,20 +195,24 @@ export default function FileManagerTableRow({ row, selected, onSelectRow, onDele
             whiteSpace: 'nowrap',
           }}
         >
-          {/* <Checkbox
-            color="warning"
-            icon={<Iconify icon="eva:star-outline" />}
-            checkedIcon={<Iconify icon="eva:star-fill" />}
-            checked={favorite.value}
-            onChange={favorite.onToggle}
-            sx={{ p: 0.75 }}
-          /> */}
-
           <IconButton color={confirm.value == true ? 'default' : 'error'} onClick={confirm.onTrue}>
             <Iconify icon="ic:baseline-delete" />
           </IconButton>
         </TableCell>
 
+
+        <TableCell align="center"
+          sx={{
+            px: 1,
+            whiteSpace: 'nowrap',
+          }}
+        >
+          <Link component={RouterLink} href={paths.dashboard.admin.product.edit(row.id)} variant="subtitle2">
+            <IconButton color={confirm.value == true ? 'default' : 'error'} >
+              <Iconify icon="ri:edit-fill" />
+            </IconButton>
+          </Link>
+        </TableCell>
 
       </TableRow>
       <CustomPopover
@@ -232,6 +236,15 @@ export default function FileManagerTableRow({ row, selected, onSelectRow, onDele
           </MenuItem>
         ))}
       </CustomPopover>
+      <FileManagerFileDetails
+        item={row}
+        // favorited={favorite.value}
+        // onFavorite={favorite.onToggle}
+        onCopyLink={handleCopy}
+        open={details.value}
+        onClose={details.onFalse}
+        onDelete={onDeleteRow}
+      />
 
       <ConfirmDialog
         open={confirm.value}

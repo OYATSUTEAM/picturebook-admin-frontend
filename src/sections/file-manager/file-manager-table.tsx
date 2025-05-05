@@ -28,11 +28,12 @@ import { useCallback, useEffect, useState } from 'react';
 const TABLE_HEAD = [
   { id: 'name', label: 'Name' },
   { id: 'price', label: 'Price', align: 'center', width: 140 },
-  { id: 'size', label: 'Size', align: 'center', width: 140 },
+  { id: 'size', label: 'Size', align: 'center', width: 100 },
   { id: 'modifiedAt', label: 'Modified', align: 'center', width: 140 },
   { id: 'shared', label: 'Purchased', align: 'center', width: 140 },
   { id: 'publish', label: 'Publish', align: 'center', width: 120 },
-  { id: '', align: 'center', width: 88 },
+  { id: '', align: 'center', width: 60 },
+  { id: '', align: 'center', width: 60 },
 ];
 
 // ----------------------------------------------------------------------

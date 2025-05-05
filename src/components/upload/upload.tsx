@@ -157,7 +157,7 @@ export default function Upload({
         {hasFile ? renderSinglePreview : renderPlaceholder}
       </Box>
 
-      {removeSinglePreview}
+      {/* {removeSinglePreview} */}
 
       {helperText && helperText}
 

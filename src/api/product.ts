@@ -1,5 +1,6 @@
 import useSWR from 'swr';
 import { useMemo } from 'react';
+import axios from 'axios';
 
 import { fetcher, endpoints, poster } from 'src/utils/axios';
 
@@ -36,7 +37,6 @@ export function useGetFileProducts() {
 
   const { data, isLoading, error, isValidating } = useSWR(URL, poster);
 
-  console.log(data, isLoading, error, isValidating)
 
   const memoizedValue = useMemo(
     () => ({
@@ -93,3 +93,17 @@ export function useSearchProducts(query: string) {
 
   return memoizedValue;
 }
+
+
+export async function createNewProduct(formData: FormData) {
+  try {
+    const response = await axios.post(`${HOST_API}${endpoints.upload}`, formData);
+    return {
+      responsive: response.data.responsive,
+      status: response.status
+    };
+  } catch (error) {
+    throw error;
+  }
+}
+

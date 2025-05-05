@@ -1,4 +1,5 @@
 import { UserCreateView } from 'src/sections/user/view';
+import { AdminCreateView } from 'src/sections/admin/view';
 
 // ----------------------------------------------------------------------
 
