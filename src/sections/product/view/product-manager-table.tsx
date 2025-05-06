@@ -20,7 +20,7 @@ import {
 
 import { IFile } from 'src/types/file';
 
-import FileManagerTableRow from './file-manager-table-row';
+import FileManagerTableRow from '../../file-manager/file-manager-table-row';
 import { useCallback, useEffect, useState } from 'react';
 
 // ----------------------------------------------------------------------
@@ -32,8 +32,6 @@ const TABLE_HEAD = [
   { id: 'modifiedAt', label: 'Modified', align: 'center', width: 140 },
   { id: 'shared', label: 'Purchased', align: 'center', width: 140 },
   { id: 'publish', label: 'Publish', align: 'center', width: 120 },
-  { id: 'edit', align: 'center', width: 60 },
-  { id: 'delete', align: 'center', width: 60 },
 ];
 
 // ----------------------------------------------------------------------
@@ -46,7 +44,7 @@ type Props = {
   onDeleteRow: (id: string) => void;
 };
 
-export default function FileManagerTable({
+export default function ProductManagerTable({
   table,
   notFound,
   onDeleteRow,

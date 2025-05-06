@@ -175,7 +175,6 @@ export default function ProductEditView({ id }: Props) {
       const newFile = acceptedFiles[0];
       if (newFile) {
 
-        console.log(newFile)
         const fileWithPreview = Object.assign(newFile, {
           preview: URL.createObjectURL(newFile),
           // size: newFile.size,

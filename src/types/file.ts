@@ -15,7 +15,7 @@ export type IFileShared = {
   id: string;
   name: string;
   email: string;
-  avatarUrl: string;
+  // avatarUrl: string;
   permission: string;
 };
 
@@ -34,7 +34,7 @@ export type IFolderManager = {
   publish: string;
   price: number;
   totalFiles?: number;
-  shared: IFileManager[] | [];
+  shared: IFileShared[] | [];
   modifiedAt: Date | number ;
   onChangePublish: (newValue: string) => void;
 

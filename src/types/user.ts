@@ -117,6 +117,7 @@ export type IUserAccount = {
   displayName: string;
   purchased: string[] | null;
   status: string;
+  isVerified: boolean;
 };
 
 export type IUserAccountBillingHistory = {

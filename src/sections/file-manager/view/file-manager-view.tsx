@@ -126,7 +126,6 @@ export default function FileManagerView() {
   const handleDeleteItem = useCallback(
     async (id: string) => {
       const deleteRow = tableData.filter((row) => row.id !== id);
-      console.log(id)
       const response = await axios.post(`${HOST_API}${endpoints.deleteExistingFile}`, { id: id });
       enqueueSnackbar(response.data.message);
       setTableData(deleteRow);
@@ -205,8 +204,7 @@ export default function FileManagerView() {
             heading="List"
             links={[
               { name: 'Dashboard', href: paths.dashboard.root },
-              { name: 'Product', href: paths.dashboard.product.root, },
-              { name: 'List' },
+              { name: 'Product List' },
             ]}
             action={
               <Button

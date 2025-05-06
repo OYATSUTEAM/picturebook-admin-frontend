@@ -44,7 +44,6 @@ export default function useTable(props?: UseTableProps): ReturnType {
       const newSelected = selected.includes(inputValue)
         ? selected.filter((value) => value !== inputValue)
         : [...selected, inputValue];
-console.log('selected row is called')
       setSelected(newSelected);
     },
     [selected]

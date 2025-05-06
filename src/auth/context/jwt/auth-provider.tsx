@@ -142,7 +142,6 @@ export function AuthProvider({ children }: Props) {
     const res = await axios.post(endpoints.auth.login, data);
 
     const { accessToken, user } = res.data;
-    console.log(user)
     setSession(accessToken);
 
     dispatch({
@@ -165,7 +164,6 @@ export function AuthProvider({ children }: Props) {
         passwordConfirm,
         name,
       };
-      console.log('this is register request')
       const res = await axios.post(endpoints.auth.register, data);
 
       const { accessToken, user } = res.data;

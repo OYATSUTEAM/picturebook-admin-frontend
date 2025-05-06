@@ -1,5 +1,4 @@
 import Button from '@mui/material/Button';
-import Avatar from '@mui/material/Avatar';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import TableRow from '@mui/material/TableRow';
@@ -18,7 +17,6 @@ import CustomPopover, { usePopover } from 'src/components/custom-popover';
 import { IUserAccount, IUserItem } from 'src/types/user';
 
 import UserQuickEditForm from './admin-quick-edit-form';
-import { Chip } from '@mui/material';
 
 // ----------------------------------------------------------------------
 
@@ -30,7 +28,7 @@ type Props = {
   onDeleteRow: VoidFunction;
 };
 
-export default function AdminTableRow({
+export default function UserTableRow({
   row,
   selected,
   onEditRow,
@@ -98,7 +96,7 @@ export default function AdminTableRow({
         <TableCell align="right" sx={{ px: 1, whiteSpace: 'nowrap' }}>
           <Tooltip title="Quick Edit" placement="top" arrow>
             <IconButton color={quickEdit.value ? 'default' : 'default'} onClick={quickEdit.onTrue}>
-              <Iconify icon="solar:pen-bold" />
+              <Iconify icon="weui:setting-filled" />
             </IconButton>
           </Tooltip>
 

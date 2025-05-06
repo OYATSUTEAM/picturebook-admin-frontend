@@ -35,7 +35,6 @@ function Container({ children }: Props) {
 
     if (authenticated) {
 
-      console.log('this is home layout', returnTo)
       router.replace(returnTo);
 
     }

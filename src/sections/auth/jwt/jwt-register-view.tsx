@@ -68,7 +68,6 @@ export default function JwtRegisterView() {
 
   const onSubmit = handleSubmit(async (data) => {
     try {
-      console.log(data.email, data.password, data.passwordConfirm, data.name)
       await register?.(data.email, data.password, data.passwordConfirm, data.name);
 
       router.push(returnTo || PATH_AFTER_LOGIN);

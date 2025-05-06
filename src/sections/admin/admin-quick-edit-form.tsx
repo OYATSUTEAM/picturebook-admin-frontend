@@ -1,5 +1,5 @@
 import * as Yup from 'yup';
-import { useMemo } from 'react';
+import { useMemo, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 
@@ -12,14 +12,19 @@ import LoadingButton from '@mui/lab/LoadingButton';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
+import Typography from '@mui/material/Typography';
+import CircularProgress from '@mui/material/CircularProgress';
 
 import { countries } from 'src/assets/data';
-import { USER_STATUS_OPTIONS } from 'src/_mock';
+import { _roles, USER_ROLE_OPTIONS, USER_STATUS_OPTIONS } from 'src/_mock';
+import axios, { endpoints } from 'src/utils/axios';
 
 import { useSnackbar } from 'src/components/snackbar';
 import FormProvider, { RHFSelect, RHFTextField, RHFAutocomplete } from 'src/components/hook-form';
 
 import { IUserAccount, IUserItem } from 'src/types/user';
+import { IProductItem } from 'src/types/product';
+import Label from 'src/components/label';
 
 // ----------------------------------------------------------------------
 
@@ -31,6 +36,8 @@ type Props = {
 
 export default function AdminQuickEditForm({ currentUser, open, onClose }: Props) {
   const { enqueueSnackbar } = useSnackbar();
+  const [purchasedProducts, setPurchasedProducts] = useState<IProductItem[]>([]);
+  const [loading, setLoading] = useState(false);
 
   const NewUserSchema = Yup.object().shape({
     name: Yup.string().required('Name is required'),
@@ -66,6 +73,38 @@ export default function AdminQuickEditForm({ currentUser, open, onClose }: Props
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
+
+  useEffect(() => {
+    const fetchPurchasedProducts = async () => {
+      if (!currentUser?.purchased || !Array.isArray(currentUser.purchased)) return;
+
+      setLoading(true);
+      try {
+        const productPromises = currentUser.purchased.map(async (productId) => {
+          try {
+            const response = await axios.post(endpoints.product.details, { productId });
+            return response.data.product;
+          } catch (error) {
+            console.error(`Error fetching product ${productId}:`, error);
+            return null;
+          }
+        });
+
+        const products = await Promise.all(productPromises);
+        console.log(products)
+        setPurchasedProducts(products.filter((product): product is IProductItem => product !== null));
+      } catch (error) {
+        console.error('Error fetching purchased products:', error);
+        enqueueSnackbar('Error loading purchased products', { variant: 'error' });
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (open) {
+      fetchPurchasedProducts();
+    }
+  }, [currentUser?.purchased, open, enqueueSnackbar]);
 
   const onSubmit = handleSubmit(async (data) => {
     try {
@@ -114,29 +153,72 @@ export default function AdminQuickEditForm({ currentUser, open, onClose }: Props
               ))}
             </RHFSelect>
 
-            <Box sx={{ display: { xs: 'none', sm: 'block' } }} />
-
-            <RHFTextField name="name" label="Full Name" />
-            <RHFTextField name="email" label="Email Address" />
-            <RHFTextField name="phoneNumber" label="Phone Number" />
-
-            <RHFAutocomplete
-              name="country"
-              type="country"
-              label="Country"
-              placeholder="Choose a country"
-              fullWidth
-              options={countries.map((option) => option.label)}
-              getOptionLabel={(option) => option}
-            />
-
-            <RHFTextField name="state" label="State/Region" />
-            <RHFTextField name="city" label="City" />
-            <RHFTextField name="address" label="Address" />
-            <RHFTextField name="zipCode" label="Zip/Code" />
-            <RHFTextField name="company" label="Company" />
-            <RHFTextField name="role" label="Role" />
+            <RHFSelect name="role" label="Role">
+              {USER_ROLE_OPTIONS.map((role) => (
+                <MenuItem key={role.value} value={role.value}>
+                  {role.label}
+                </MenuItem>
+              ))}
+            </RHFSelect>
+            <RHFTextField disabled name="name" label="Full Name" />
+            <RHFTextField disabled name="email" label="Email Address" />
           </Box>
+
+          <Box sx={{ mt: 3 }}>
+            {/* <Label variant="soft" color="info" sx={{ mb: 2 }}> */}
+              Purchased Products
+            {/* </Label> */}
+            <Box sx={{ p: 2, bgcolor: 'background.neutral', borderRadius: 1 }}>
+              {loading ? (
+                <Box sx={{ display: 'flex', justifyContent: 'center', p: 2 }}>
+                  <CircularProgress size={24} />
+                </Box>
+              ) : purchasedProducts.length > 0 ? (
+                <Box component="ul" sx={{ m: 0, p: 0, listStyle: 'none' }}>
+                  {purchasedProducts.map((product) => (
+                    <Box
+                      width={'-webkit-fill-available'}
+                      component="li"
+                      key={product.id}
+                      sx={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        mb: 2,
+                        p: 1,
+                        borderRadius: 1,
+                        bgcolor: 'background.paper',
+                      }}
+                    >
+                      {product.coverUrl && (
+                        <Box
+                          component="img"
+                          src={product.coverUrl}
+                          alt={product.name}
+                          sx={{
+                            width: 48,
+                            height: 48,
+                            borderRadius: 1,
+                            mr: 2,
+                            objectFit: 'cover',
+                          }}
+                        />
+                      )}
+                      <Box display={'flex'} flexDirection={'row'} justifyContent={'space-between'} width={'inherit'}>
+                        <Typography variant="subtitle2">{product.name}</Typography>
+                        <Typography variant="body2" color="text.secondary">
+                          {product.price} 円
+                        </Typography>
+                      </Box>
+                    </Box>
+                  ))}
+                </Box>
+              ) : (
+                <Box sx={{ color: 'text.secondary' }}>No purchased products</Box>
+              )}
+            </Box>
+          </Box>
+
+          <Box columnGap={2}></Box>
         </DialogContent>
 
         <DialogActions>

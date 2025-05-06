@@ -53,7 +53,6 @@ export default function FileManagerFileDetails({
   ...other
 }: Props) {
   const { name, size, url, shared, modifiedAt, pdfFile, audioFiles, publish } = item;
-  console.log(item, 'this is detail ')
   const hasShared = shared && !!shared.length;
 
   const toggleTags = useBoolean(true);
@@ -97,38 +96,36 @@ export default function FileManagerFileDetails({
   const renderProperties = (
     <Stack spacing={1.5}>
 
-      <Typography variant="h6"> Info </Typography>
-      
+      <Typography variant="h4"> Info </Typography>
+
       {properties.value && (
         <>
-          <Stack direction="row" sx={{ typography: 'caption', textTransform: 'capitalize' }}>
+          <Stack direction="row" sx={{ typography: 'caption', textTransform: 'capitalize', fontSize: '15px' }} >
             <Box component="span" sx={{ width: 80, color: 'text.secondary', mr: 2 }}>
               Name
             </Box>
             {name}
           </Stack>
 
-          <Stack direction="row" sx={{ typography: 'caption', textTransform: 'capitalize' }}>
+          <Stack direction="row" sx={{ typography: 'caption', textTransform: 'capitalize', fontSize: '15px' }}>
             <Box component="span" sx={{ width: 80, color: 'text.secondary', mr: 2 }}>
               Size
             </Box>
             {`${size} Mb`}
           </Stack>
 
-          <Stack direction="row" sx={{ typography: 'caption', textTransform: 'capitalize' }}>
+          <Stack direction="row" sx={{ typography: 'caption', textTransform: 'capitalize', fontSize: '15px' }}>
             <Box component="span" sx={{ width: 80, color: 'text.secondary', mr: 2 }}>
               Modified
             </Box>
             {fDateTime(modifiedAt)}
           </Stack>
 
-          <Stack direction="row" sx={{ typography: 'caption', textTransform: 'capitalize' }}>
+          <Stack direction="row" sx={{ typography: 'caption', textTransform: 'capitalize', fontSize: '15px' }}>
             <Box component="span" sx={{ width: 80, color: 'text.secondary', mr: 2 }}>
               Publish
             </Box>
-            <Chip color={publish == 'published' ? 'success' : 'error'} label={publish == 'published' ? 'publish' : 'draft'} size="small" variant="soft" />
-
-            {/* {publish} */}
+            <Chip color={publish == 'published' ? 'success' : 'error'} label={publish == 'published' ? 'publish' : 'draft'} size="small" variant="outlined" />
           </Stack>
         </>
       )}
@@ -148,7 +145,7 @@ export default function FileManagerFileDetails({
         sx={{
           // m: 0.5,
           width: 'inherit',
-          height: 60,
+          height: 55,
           padding: '0 20px',
           borderRadius: 1.25,
           overflow: 'hidden',
@@ -156,8 +153,7 @@ export default function FileManagerFileDetails({
           border: (theme) => `solid 1px ${theme.palette.grey[500]}`,
         }}
       >
-        <div>
-
+        <Stack direction="row" display={'flex'} columnGap={2} justifyContent={'space-between'} alignItems={'center'} sx={{ typography: 'caption', textTransform: 'capitalize' }}>
           <Box
             component="img"
             src={fileThumb('pdf')}
@@ -167,9 +163,12 @@ export default function FileManagerFileDetails({
               flexShrink: 0,
             }}
           />
-          <span >  {pdfFile.name}  </span>
-        </div>
-        <span>  {`${pdfFile.size}Mb`}  </span>
+          {pdfFile.name}
+        </Stack>
+
+        <Stack direction="row" display={'flex'} columnGap={2} justifyContent={'space-between'} alignItems={'center'} sx={{ typography: 'caption', textTransform: 'capitalize' }}>
+          {`${pdfFile.size}Mb`}
+        </Stack>
       </Stack>
 
 
@@ -187,7 +186,7 @@ export default function FileManagerFileDetails({
       sx={{
         // m: 0.5,
         width: 'inherit',
-        height: 60,
+        height: 55,
         padding: '0 20px',
         borderRadius: 1.25,
         overflow: 'hidden',
@@ -195,7 +194,8 @@ export default function FileManagerFileDetails({
         border: (theme) => `solid 1px ${theme.palette.grey[500]}`,
       }}
     >
-      <div>
+
+      <Stack direction="row" display={'flex'} columnGap={2} justifyContent={'space-between'} alignItems={'center'} sx={{ typography: 'caption', textTransform: 'capitalize' }}>
         <Box
           component="img"
           src={fileThumb('audio')}
@@ -205,9 +205,12 @@ export default function FileManagerFileDetails({
             flexShrink: 0,
           }}
         />
-        <span>  {audio.name}  </span>
-      </div>
-      <span>  {`${audio.size}Mb`}  </span>
+        {audio.name}
+      </Stack>
+
+      <Stack direction="row" display={'flex'} columnGap={2} justifyContent={'space-between'} alignItems={'center'} sx={{ typography: 'caption', textTransform: 'capitalize' }}>
+        {`${audio.size}Mb`}
+      </Stack>
     </Stack>
   ));
   return (
@@ -220,15 +223,15 @@ export default function FileManagerFileDetails({
           backdrop: { invisible: true },
         }}
         PaperProps={{
-          sx: { width: 520 },
+          sx: {
+            width: {
+              xs: 320, md: 520
+            }
+          },
         }}
         {...other}
       >
         <Scrollbar sx={{ height: 1 }}>
-          <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ p: 2.5 }}>
-            <Typography variant="h6">Info</Typography>
-          </Stack>
-
           <Stack
             spacing={1.5}
             justifyContent="center"
@@ -237,46 +240,14 @@ export default function FileManagerFileDetails({
               bgcolor: 'background.neutral',
             }}
           >
-            <Stack
-              spacing={1.5}
-              justifyContent="space-between"
-              direction="row"
-              sx={{
-                p: 2.5,
-                bgcolor: 'background.neutral',
-              }}
-            >
-              <Typography variant="subtitle1" sx={{ wordBreak: 'break-all' }}>
-                {name}
-              </Typography>
-              <Chip 
-                color={publish === 'published' ? 'success' : 'error'} 
-                label={publish === 'published' ? 'publish' : 'draft'} 
-                size="medium" 
-                variant="soft" 
-              />
-            </Stack>
-
-            <Divider sx={{ borderStyle: 'dashed' }} />
-
             {renderProperties}
             {renderPDF}
             {renderAudios}
+
           </Stack>
+
         </Scrollbar>
 
-        {/* <Box sx={{ p: 2.5 }}>
-          <Button
-            fullWidth
-            variant="soft"
-            color="error"
-            size="large"
-            startIcon={<Iconify icon="solar:trash-bin-trash-bold" />}
-            onClick={onDelete}
-          >
-            Delete
-          </Button>
-        </Box> */}
       </Drawer>
 
       <FileManagerShareDialog

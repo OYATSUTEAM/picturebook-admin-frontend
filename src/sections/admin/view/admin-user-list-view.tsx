@@ -53,12 +53,12 @@ import { useGetUsers } from 'src/api/users';
 const STATUS_OPTIONS = [{ value: 'all', label: 'All' }, ...USER_STATUS_OPTIONS];
 
 const TABLE_HEAD = [
-  { id: 'name', label: 'Name', align:'left' },
-  { id: 'purchased', label: 'Purchased', width: 180 },
-  { id: 'role', label: 'Role', width: 180 },
-  { id: 'status', label: 'Status', width: 100 },
-  { id: '', width: 68 },
-  { id: '', width: 68 },
+  { id: 'name', label: 'Name', align: 'left' },
+  { id: 'purchased', label: 'Purchased', width: 150 },
+  { id: 'role', label: 'Role', width: 150 },
+  { id: 'status', label: 'Status', width: 130 },
+  { id: 'edit', width: 88 },
+  { id: 'delete', width: 88 },
 ];
 
 const defaultFilters: IUserTableFilters = {
@@ -161,13 +161,10 @@ export default function AdminAndUserListView() {
 
   useEffect(() => {
     if (users) {
-
       setTableData(users);
-      console.log(users)
     }
   }, [users]);
-
-
+  
   return (
     <>
       <Container maxWidth={settings.themeStretch ? false : 'lg'}>
@@ -175,13 +172,12 @@ export default function AdminAndUserListView() {
           heading="List"
           links={[
             { name: 'Dashboard', href: paths.dashboard.root },
-            { name: 'User', href: paths.dashboard.user.root },
-            { name: 'List' },
+            { name: 'User List' },
           ]}
           action={
             <Button
               component={RouterLink}
-              href={paths.dashboard.user.new}
+              href={paths.dashboard.admin.new}
               variant="contained"
               startIcon={<Iconify icon="mingcute:add-line" />}
             >
@@ -283,14 +279,13 @@ export default function AdminAndUserListView() {
                     )
                   }
                 />
-
                 <TableBody>
                   {dataFiltered
                     .slice(
                       table.page * table.rowsPerPage,
                       table.page * table.rowsPerPage + table.rowsPerPage
                     )
-                    .map((row) => (
+                    .map((row, index) => (
                       <UserTableRow
                         key={row.id}
                         row={row}
@@ -305,7 +300,6 @@ export default function AdminAndUserListView() {
                     height={denseHeight}
                     emptyRows={emptyRows(table.page, table.rowsPerPage, dataFiltered.length)}
                   />
-
                   <TableNoData notFound={notFound} />
                 </TableBody>
               </Table>
@@ -318,7 +312,6 @@ export default function AdminAndUserListView() {
             rowsPerPage={table.rowsPerPage}
             onPageChange={table.onChangePage}
             onRowsPerPageChange={table.onChangeRowsPerPage}
-            //
             dense={table.dense}
             onChangeDense={table.onChangeDense}
           />
@@ -367,6 +360,13 @@ function applyFilter({
   const stabilizedThis = inputData.map((el, index) => [el, index] as const);
 
   stabilizedThis.sort((a, b) => {
+    // First sort by role (admin first)
+    const roleA = a[0].role.toLowerCase();
+    const roleB = b[0].role.toLowerCase();
+    if (roleA !== roleB) {
+      return roleA === 'admin' ? -1 : 1;
+    }
+    // Then apply the original comparator
     const order = comparator(a[0], b[0]);
     if (order !== 0) return order;
     return a[1] - b[1];

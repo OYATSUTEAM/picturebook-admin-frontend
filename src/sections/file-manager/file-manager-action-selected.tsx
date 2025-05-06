@@ -26,6 +26,8 @@ export default function FileManagerActionSelected({
   sx,
   ...other
 }: Props) {
+
+  console.log(selected, 'this is selected products')
   return (
     <Portal>
       <Box
@@ -57,15 +59,27 @@ export default function FileManagerActionSelected({
         />
 
         {selected && (
-          <Typography
-            variant="subtitle2"
-            sx={{
-              mr: 2,
-              color: (theme) => (theme.palette.mode === 'light' ? 'common.white' : 'grey.800'),
-            }}
-          >
-            {selected.length} Items selected
-          </Typography>
+          <Box>
+            <Typography
+              variant="subtitle2"
+              sx={{
+                mr: 2,
+                color: (theme) => (theme.palette.mode === 'light' ? 'common.white' : 'grey.800'),
+              }}
+            >
+              {selected.length} Items selected
+            </Typography>
+            <Typography
+              variant="subtitle2"
+              sx={{
+                mr: 2,
+                color: (theme) => (theme.palette.mode === 'light' ? 'common.white' : 'grey.800'),
+              }}
+            >
+              {selected.length} 円
+            </Typography>
+
+          </Box>
         )}
 
         {action && action}

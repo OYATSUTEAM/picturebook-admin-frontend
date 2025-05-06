@@ -24,7 +24,6 @@ function NavHorizontal() {
   const { user } = useMockedUser();
 
   // const navData = useAdminNavData();
-console.log('this is user')
   return (
     <AppBar
       component="div"

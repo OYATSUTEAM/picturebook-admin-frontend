@@ -200,7 +200,6 @@ export default function ProductDetailsView({ id }: Props) {
       formData.append('price', data.price.toString());
       formData.append('description', data.description);
       const filename: any = await axios.post(`${HOST_API}${endpoints.filename}`, { name: data.name });
-      console.log(filename)
       if (filename.status == 200) {
         const response = await axios.post(`${HOST_API}${endpoints.upload}`, formData);
         enqueueSnackbar(response.data.message, { variant: 'success' });

@@ -17,7 +17,6 @@ import { adminNavData } from './config-navigation';
 
 export default function NavMini() {
   const { user } = useMockedUser();
-console.log('this is user ')
   // const navData = useNavData();
   const navData = adminNavData;
 

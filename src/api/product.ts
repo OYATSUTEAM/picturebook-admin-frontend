@@ -55,7 +55,7 @@ export function useGetFileProducts() {
 // ----------------------------------------------------------------------
 
 export function useGetProduct(productId: string) {
-  const URL = productId ? [endpoints.product.details, { params: { productId } }] : '';
+  const URL = productId ? [endpoints.product.details, {productId}] : '';
 
   const { data, isLoading, error, isValidating } = useSWR(URL, poster);
   const memoizedValue = useMemo(

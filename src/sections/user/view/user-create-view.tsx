@@ -16,7 +16,7 @@ export default function UserCreateView() {
 
   return (
     <Container maxWidth={settings.themeStretch ? false : 'lg'}>
-      <CustomBreadcrumbs
+      {/* <CustomBreadcrumbs
         heading="Create a new user"
         links={[
           {
@@ -25,16 +25,16 @@ export default function UserCreateView() {
           },
           {
             name: 'User',
-            href: paths.dashboard.user.root,
+            href: paths.dashboard.admin.list,
           },
           { name: 'New user' },
         ]}
         sx={{
           mb: { xs: 3, md: 5 },
         }}
-      />
+      /> */}
 
-      <UserNewEditForm />
+      <UserNewEditForm slotprops={paths.dashboard.admin.list} />
     </Container>
   );
 }

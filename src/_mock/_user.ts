@@ -9,6 +9,10 @@ export const USER_STATUS_OPTIONS = [
   { value: 'pending', label: 'Pending' },
   { value: 'banned', label: 'Banned' },
 ];
+export const USER_ROLE_OPTIONS = [
+  { value: 'admin', label: 'Admin' },
+  { value: 'user', label: 'User' },
+];
 
 export const _userAbout = {
   id: _mock.id(1),

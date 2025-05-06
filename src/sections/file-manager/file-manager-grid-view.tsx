@@ -63,13 +63,13 @@ export default function FileManagerGridView({
   return (
     <>
       <Box ref={containerRef}>
-        <FileManagerPanel
+        {/* <FileManagerPanel
           title="Folders"
-          subTitle={`${dataFiltered.filter((item) => item.type === 'folder').length} folders`}
+          // subTitle={`${dataFiltered.filter((item) => item.type === 'folder').length} folders`}
           onOpen={newFolder.onTrue}
           collapse={folders.value}
           onCollapse={folders.onToggle}
-        />
+        /> */}
 
         <Collapse in={!folders.value} unmountOnExit>
           <Box
@@ -83,7 +83,7 @@ export default function FileManagerGridView({
             }}
           >
             {dataFiltered
-              .filter((i) => i.type === 'folder')
+              .filter((i) => i==i)
               .map((folder) => (
                 <FileManagerFolderItem
                   key={folder.id}
@@ -99,15 +99,15 @@ export default function FileManagerGridView({
 
         <Divider sx={{ my: 5, borderStyle: 'dashed' }} />
 
-        <FileManagerPanel
+        {/* <FileManagerPanel
           title="Files"
-          subTitle={`${dataFiltered.filter((item) => item.type !== 'folder').length} files`}
+          // subTitle={`${dataFiltered.filter((item) => item.type !== 'folder').length} files`}
           onOpen={upload.onTrue}
           collapse={files.value}
           onCollapse={files.onToggle}
-        />
+        /> */}
 
-        <Collapse in={!files.value} unmountOnExit>
+        {/* <Collapse in={!files.value} unmountOnExit>
           <Box
             display="grid"
             gridTemplateColumns={{
@@ -119,7 +119,7 @@ export default function FileManagerGridView({
             gap={3}
           >
             {dataFiltered
-              .filter((i) => i.type !== 'folder')
+              .filter((i) => i==i)
               .map((file) => (
                 <FileManagerFileItem
                   key={file.id}
@@ -131,7 +131,7 @@ export default function FileManagerGridView({
                 />
               ))}
           </Box>
-        </Collapse>
+        </Collapse> */}
 
         {!!selected?.length && (
           <FileManagerActionSelected
@@ -146,7 +146,7 @@ export default function FileManagerGridView({
             }
             action={
               <>
-                <Button
+                {/* <Button
                   size="small"
                   color="error"
                   variant="contained"
@@ -155,16 +155,16 @@ export default function FileManagerGridView({
                   sx={{ mr: 1 }}
                 >
                   Delete
-                </Button>
+                </Button> */}
 
                 <Button
                   color="primary"
                   size="small"
                   variant="contained"
-                  startIcon={<Iconify icon="solar:share-bold" />}
+                  startIcon={<Iconify icon="icon-park-outline:buy" />}
                   onClick={share.onTrue}
                 >
-                  Share
+                  Purchase
                 </Button>
               </>
             }
@@ -182,20 +182,6 @@ export default function FileManagerGridView({
         }}
       />
 
-      <FileManagerNewFolderDialog open={upload.value} onClose={upload.onFalse} />
-
-      <FileManagerNewFolderDialog
-        open={newFolder.value}
-        onClose={newFolder.onFalse}
-        title="New Folder"
-        onCreate={() => {
-          newFolder.onFalse();
-          setFolderName('');
-          console.info('CREATE NEW FOLDER', folderName);
-        }}
-        folderName={folderName}
-        onChangeFolderName={handleChangeFolderName}
-      />
     </>
   );
 }

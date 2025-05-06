@@ -53,7 +53,6 @@ export default function FileManagerTableRow({ row, selected, onSelectRow, onDele
   // const { name, size, type, modifiedAt, shared, isFavorited } = row;
   const { name, price, size, modifiedAt, publishOptions, shared, publish, onChangePublish } = row;
 
-  console.log(size)
   const { enqueueSnackbar } = useSnackbar();
 
   const { copy } = useCopyToClipboard();
@@ -153,7 +152,6 @@ export default function FileManagerTableRow({ row, selected, onSelectRow, onDele
             </Typography>
           </Stack>
           {/* </Link> */}
-
         </TableCell>
 
         <TableCell align="center" onClick={()=>{}} sx={{ whiteSpace: 'nowrap' }}>

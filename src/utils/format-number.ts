@@ -111,6 +111,5 @@ export function fData(inputValue: InputValue) {
   const index = Math.floor(Math.log(number) / Math.log(baseValue));
 
   const fm = `${parseFloat((number / baseValue ** index).toFixed(decimal))} ${units[2]}`;
-  console.log(fm)
   return fm;
 }

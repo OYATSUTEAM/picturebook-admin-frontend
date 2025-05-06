@@ -26,7 +26,7 @@ import FileThumbnail from 'src/components/file-thumbnail';
 import { ConfirmDialog } from 'src/components/custom-dialog';
 import CustomPopover, { usePopover } from 'src/components/custom-popover';
 
-import { IFileManager } from 'src/types/file';
+import { IFile, IFileManager } from 'src/types/file';
 
 import FileManagerShareDialog from './file-manager-share-dialog';
 import FileManagerFileDetails from './file-manager-file-details';
@@ -34,7 +34,8 @@ import FileManagerFileDetails from './file-manager-file-details';
 // ----------------------------------------------------------------------
 
 interface Props extends CardProps {
-  file: IFileManager;
+  // file: IFileManager;
+  file: IFile;
   selected?: boolean;
   onSelect?: VoidFunction;
   onDelete: VoidFunction;
@@ -86,7 +87,7 @@ export default function FileManagerFileItem({
         sx={{ p: 0.75 }}
       />
     ) : (
-      <FileThumbnail file={file.type} sx={{ width: 36, height: 36 }} />
+      <FileThumbnail file={'file.type'} sx={{ width: 36, height: 36 }} />
     );
 
   const renderAction = (
@@ -160,9 +161,9 @@ export default function FileManagerFileItem({
         },
       }}
     >
-      {file.shared?.map((person) => (
+      {/* {file.shared?.map((person) => (
         <Avatar key={person.id} alt={person.name} src={person.avatarUrl} />
-      ))}
+      ))} */}
     </AvatarGroup>
   );
 
