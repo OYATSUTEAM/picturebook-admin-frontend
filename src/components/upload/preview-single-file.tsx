@@ -14,7 +14,6 @@ type Props = {
 
 export default function SingleFilePreview({ imgUrl = '', file }: Props) {
   // const { size = 0 } = file ? fileData(file) : {};
-  console.log(imgUrl)
   return (
     <Box
       sx={{

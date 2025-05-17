@@ -34,7 +34,7 @@ export type IFolderManager = {
   publish: string;
   price: number;
   totalFiles?: number;
-  shared: IFileShared[] | [];
+  purchased: IFileShared[] | [];
   modifiedAt: Date | number ;
   onChangePublish: (newValue: string) => void;
 

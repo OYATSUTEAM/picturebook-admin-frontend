@@ -131,6 +131,7 @@ export default function ProductNewEditForm() {
   const handleDropPDFFile = useCallback(
     async (acceptedFiles: File[]) => {
       const newFile = acceptedFiles[0];
+      console.log(newFile)
       if (newFile) {
         const fileWithPreview = Object.assign(newFile, {
           preview: URL.createObjectURL(newFile),
@@ -181,7 +182,6 @@ export default function ProductNewEditForm() {
     setAudioFiles([]);
     setValue('audio', null, { shouldValidate: true });
   };
-
 
   const onSubmit = handleSubmit(async (data) => {
     try {

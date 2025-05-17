@@ -50,8 +50,8 @@ type Props = {
 export default function FileManagerTableRow({ row, selected, onSelectRow, onDeleteRow }: Props) {
   const theme = useTheme();
 
-  // const { name, size, type, modifiedAt, shared, isFavorited } = row;
-  const { name, price, size, modifiedAt, publishOptions, shared, publish, onChangePublish } = row;
+  // const { name, size, type, modifiedAt, purchased, isFavorited } = row;
+  const { name, price, size, modifiedAt, publishOptions, purchased, publish, onChangePublish } = row;
 
   const { enqueueSnackbar } = useSnackbar();
 
@@ -177,7 +177,7 @@ export default function FileManagerTableRow({ row, selected, onSelectRow, onDele
           />
         </TableCell>
         <TableCell align="center" onClick={()=>{}}>
-          {shared.length}
+          {purchased.length}
         </TableCell>
 
         <TableCell align="center" onClick={()=>{}} sx={{ whiteSpace: 'nowrap' }}>
