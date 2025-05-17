@@ -14,7 +14,7 @@ type Props = {
 
 export default function SingleFilePreview({ imgUrl = '', file }: Props) {
   // const { size = 0 } = file ? fileData(file) : {};
-console.log(imgUrl, file)
+  console.log(imgUrl)
   return (
     <Box
       sx={{
@@ -30,15 +30,16 @@ console.log(imgUrl, file)
         justifyContent: 'center',
       }}
     >
-      {/* <Image
+      <Image
         alt="file preview"
+   
         src={imgUrl}
         sx={{
           width: 1,
           height: 1,
           borderRadius: 1,
         }}
-      /> */}
+      />
       {/* {size > 0 && (
         <Typography
           variant="caption"

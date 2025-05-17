@@ -15,6 +15,7 @@ type FileIconProps = {
   onDownload?: VoidFunction;
   sx?: SxProps<Theme>;
   imgSx?: SxProps<Theme>;
+  imgUrl?: string;
 };
 
 export default function FileThumbnail({
@@ -24,6 +25,7 @@ export default function FileThumbnail({
   onDownload,
   sx,
   imgSx,
+  imgUrl,
 }: FileIconProps) {
   const { name = '', path = '', preview = '' } = fileData(file);
   const format = fileFormat(path || preview);
@@ -32,7 +34,7 @@ export default function FileThumbnail({
     format === 'image' && imageView ? (
       <Box
         component="img"
-        src={preview}
+        src={imgUrl || preview}
         sx={{
           width: 1,
           height: 1,

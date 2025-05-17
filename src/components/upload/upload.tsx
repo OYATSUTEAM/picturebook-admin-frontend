@@ -28,6 +28,7 @@ export default function Upload({
   //
   files,
   thumbnail,
+  thumbnailUrl,
   onUpload,
   onRemove,
   onRemoveAll,
@@ -41,11 +42,9 @@ export default function Upload({
   });
 
   const hasFile = !!file && !multiple;
-
   const hasFiles = !!files && multiple && !!files.length;
-
   const hasError = isDragReject || !!error;
-
+  // console.log(thumbnailUrl);
   const renderPlaceholder = (
     <Stack spacing={3} alignItems="center" justifyContent="center" flexWrap="wrap">
       {/* <UploadIllustration sx={{ width: 1, maxWidth: 200 }} /> */}
@@ -68,7 +67,8 @@ export default function Upload({
   );
 
   const renderSinglePreview = (
-    <SingleFilePreview imgUrl={typeof file === 'string' ? file : file?.preview} />
+    <SingleFilePreview imgUrl={typeof thumbnailUrl === 'string' ? thumbnailUrl : (typeof file === 'string' ? file : (typeof file?.preview === 'string' ? file.preview : undefined))} file={file ?? undefined} />
+
   );
 
   const removeSinglePreview = hasFile && onDelete && (
@@ -94,7 +94,7 @@ export default function Upload({
   const renderMultiPreview = hasFiles && (
     <>
       <Box sx={{ my: 3 }}>
-        <MultiFilePreview files={files} thumbnail={thumbnail} onRemove={onRemove} />
+        <MultiFilePreview files={files} thumbnail={thumbnail} thumbnailUrl={thumbnailUrl} onRemove={onRemove} />
       </Box>
 
       <Stack direction="row" justifyContent="flex-end" spacing={1.5}>

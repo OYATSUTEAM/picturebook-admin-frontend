@@ -14,12 +14,13 @@ import FileThumbnail, { fileData } from '../file-thumbnail';
 
 // ----------------------------------------------------------------------
 
-export default function MultiFilePreview({ thumbnail, files, onRemove, sx }: UploadProps) {
+type Props = UploadProps & { thumbnailUrl?: string };
+
+export default function MultiFilePreview({ thumbnail, files, onRemove, sx, thumbnailUrl }: Props) {
   return (
     <AnimatePresence initial={false}>
       {files?.map((file) => {
-        const { key, name = '', size = 0 } = fileData(file);
-
+        const { key, name = '' } = fileData(file);
         const isNotFormatFile = typeof file === 'string';
 
         if (thumbnail) {
@@ -46,6 +47,7 @@ export default function MultiFilePreview({ thumbnail, files, onRemove, sx }: Upl
                 tooltip
                 imageView
                 file={file}
+                imgUrl={thumbnailUrl}
                 sx={{ position: 'absolute' }}
                 imgSx={{ position: 'absolute' }}
               />
@@ -94,11 +96,6 @@ export default function MultiFilePreview({ thumbnail, files, onRemove, sx }: Upl
 
             <ListItemText
               primary={isNotFormatFile ? file : name}
-              secondary={isNotFormatFile ? '' : fData(size)}
-              secondaryTypographyProps={{
-                component: 'span',
-                typography: 'caption',
-              }}
             />
 
             {onRemove && (

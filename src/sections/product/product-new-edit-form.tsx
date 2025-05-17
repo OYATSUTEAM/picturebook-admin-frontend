@@ -31,6 +31,7 @@ import { useAuthContext } from 'src/auth/hooks';
 import axios from 'axios';
 import { endpoints } from 'src/utils/axios';
 import { createNewProduct } from 'src/api/product';
+import { getPdfThumbnail } from 'src/utils/pdf-thumbnail';
 
 
 
@@ -40,19 +41,23 @@ import { createNewProduct } from 'src/api/product';
 export default function ProductNewEditForm() {
   const router = useRouter();
   const { enqueueSnackbar } = useSnackbar();
-
   const preview = useBoolean();
-
   const [audioFiles, setAudioFiles] = useState<(File)[]>([]);
-  const [pdfFile, setPDFFile] = useState<(File)[]>([]);
+  const [pdfFile, setPDFFile] = useState<File | null>(null);
+  const [animationFile, setAnimation] = useState<File | null>(null);
+  const [animationThumbnail, setAnimationThumbnail] = useState<string | null>(null);
+  const [pdfThumbnail, setPdfThumbnail] = useState<string | null>(null);
 
   const NewProductSchema = Yup.object().shape({
     name: Yup.string().required('Name is required'),
     price: Yup.number().required('Price is required'),
-    description: Yup.string().required('Description is required'),
+    // description: Yup.string().required('Description is required'),
     pdf: Yup.mixed()
       .nullable()
       .test('file', 'PDF is required', (value) => value instanceof File),
+    animation: Yup.mixed()
+      .nullable()
+      .test('file', 'Animation is required', (value) => value instanceof File),
     audio: Yup.mixed()
       .nullable()
       .test('file', 'Audio is required', (value) => value instanceof File),
@@ -64,6 +69,7 @@ export default function ProductNewEditForm() {
     name: string;
     price: number;
     description: string;
+    animation: File | null;
     pdf: File | null;
     audio: File | null;
   };
@@ -73,6 +79,7 @@ export default function ProductNewEditForm() {
       name: '',
       price: 0,
       description: '',
+      animation: null,
       pdf: null,
       audio: null,
     },
@@ -86,20 +93,58 @@ export default function ProductNewEditForm() {
   } = methods;
 
 
-  const handleDropPDFFile = useCallback(
+  const handleDropAnimation = useCallback(
     (acceptedFiles: File[]) => {
       const newFile = acceptedFiles[0];
       if (newFile) {
         const fileWithPreview = Object.assign(newFile, {
           preview: URL.createObjectURL(newFile),
         });
-        setPDFFile([fileWithPreview]);
-        setValue('pdf', fileWithPreview, { shouldValidate: true });
+        setAnimation(fileWithPreview);
+        setValue('animation', fileWithPreview, { shouldValidate: true });
+
+        // Extract first frame
+        const video = document.createElement('video');
+        video.src = fileWithPreview.preview;
+        video.crossOrigin = 'anonymous';
+        video.currentTime = 0;
+        video.muted = true;
+        video.playsInline = true;
+
+        video.addEventListener('loadeddata', () => {
+          // Create a canvas to draw the frame
+          const canvas = document.createElement('canvas');
+          canvas.width = video.videoWidth;
+          canvas.height = video.videoHeight;
+          const ctx = canvas.getContext('2d');
+          if (ctx) {
+            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+            const imageUrl = canvas.toDataURL('image/png');
+            setAnimationThumbnail(imageUrl);
+          }
+        });
       }
     },
     [setValue]
   );
 
+  const handleDropPDFFile = useCallback(
+    async (acceptedFiles: File[]) => {
+      const newFile = acceptedFiles[0];
+      if (newFile) {
+        const fileWithPreview = Object.assign(newFile, {
+          preview: URL.createObjectURL(newFile),
+        });
+        setPDFFile(fileWithPreview);
+        setValue('pdf', fileWithPreview, { shouldValidate: true });
+
+        // Generate PDF thumbnail
+        const thumb = await getPdfThumbnail(newFile);
+        setPdfThumbnail(thumb);
+      }
+    },
+    [setValue]
+  );
   const handleDropMultiAudioFile = useCallback(
     (acceptedFiles: File[]) => {
       const newFiles = [
@@ -117,8 +162,13 @@ export default function ProductNewEditForm() {
   );
 
   const handleRemovePDFFile = () => {
-    setPDFFile([]);
+    setPDFFile(null);
     setValue('pdf', null, { shouldValidate: true });
+  };
+
+  const handleRemoveAnimation = () => {
+    setAnimation(null);
+    setValue('animation', null, { shouldValidate: true });
   };
 
   const handleRemoveAudioFile = (inputFile: File | string) => {
@@ -136,19 +186,20 @@ export default function ProductNewEditForm() {
   const onSubmit = handleSubmit(async (data) => {
     try {
       const formData = new FormData();
-      if (pdfFile.length > 0) {
-        formData.append('pdf', pdfFile[0] as File);
+      if (animationFile) {
+        formData.append('animation', animationFile as File);
+      }
+      if (pdfFile) {
+        formData.append('pdf', pdfFile as File);
       }
       audioFiles.forEach((file, index) => {
         if (file instanceof File) {
           formData.append(`audio_${index}`, file);
         }
       });
-
       formData.append('name', data.name);
       formData.append('price', data.price.toString());
       formData.append('description', data.description);
-      
       const filename: any = await axios.post(`${HOST_API}${endpoints.filename}`, { name: data.name });
       if (filename.status === 200) {
         const result = await createNewProduct(formData);
@@ -186,12 +237,30 @@ export default function ProductNewEditForm() {
           </Stack>
 
           <Stack spacing={1.5}>
-            <Typography variant="subtitle2">PDF</Typography> 
+            <Typography variant="subtitle2">Animation</Typography>
 
             <Upload
-              multiple={true}
+              multiple={false}
               thumbnail={preview.value}
-              files={pdfFile}
+              thumbnailUrl={animationThumbnail || undefined}
+              file={animationFile}
+              accept={{ 'video/mp4': ['.mp4'] }}
+              onDrop={handleDropAnimation}
+              onRemove={() => {
+                handleRemoveAnimation();
+                setAnimationThumbnail(null);
+              }}
+            />
+          </Stack>
+
+          <Stack spacing={1.5}>
+            <Typography variant="subtitle2">PDF</Typography>
+
+            <Upload
+              multiple={false}
+              thumbnail={preview.value}
+              thumbnailUrl={pdfThumbnail || undefined}
+              file={pdfFile}
               accept={{ 'application/pdf': [] }}
               onDrop={handleDropPDFFile}
               onRemove={handleRemovePDFFile}

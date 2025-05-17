@@ -14,6 +14,7 @@ export interface UploadProps extends DropzoneOptions {
   error?: boolean;
   sx?: SxProps<Theme>;
   thumbnail?: boolean;
+  thumbnailUrl?: string;
   placeholder?: React.ReactNode;
   helperText?: React.ReactNode;
   disableMultiple?: boolean;
