@@ -139,8 +139,8 @@ export default function ProductNewEditForm() {
         setValue('pdf', fileWithPreview, { shouldValidate: true });
 
         // Generate PDF thumbnail
-        const thumb = await getPdfThumbnail(newFile);
-        setPdfThumbnail(thumb);
+        // const thumb = await getPdfThumbnail(newFile);
+        // setPdfThumbnail(thumb);
       }
     },
     [setValue]
