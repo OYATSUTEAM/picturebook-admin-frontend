@@ -184,7 +184,7 @@ export default function InvoiceDetails({ invoice }: Props) {
           <Box
             component="img"
             alt="logo"
-            src="/logo/logo_single.svg"
+            src="/logo/logo_single.png"
             sx={{ width: 48, height: 48 }}
           />
 

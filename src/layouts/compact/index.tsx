@@ -12,7 +12,7 @@ type Props = {
 export default function CompactLayout({ children }: Props) {
   return (
     <>
-      <Header />
+      {/* <Header /> */}
 
       <Container component="main">
         <Stack

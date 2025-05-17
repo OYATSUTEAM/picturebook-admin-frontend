@@ -37,14 +37,22 @@ const Logo = forwardRef<HTMLDivElement, LogoProps>(
         ref={ref}
         component="div"
         sx={{
-          width: 40,
-          height: 40,
+          width: 120,
+          height: 80,
           display: 'inline-flex',
           ...sx,
         }}
         {...other}
       >
-        <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 512 512">
+
+        <Box
+          component="img"
+          alt="logo"
+          src="/logo/logo_single.png"
+          sx={{ width: 120, height: 80 }}
+        />
+
+        {/* <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 512 512">
           <defs>
             <linearGradient id="BG1" x1="100%" x2="50%" y1="9.946%" y2="50%">
               <stop offset="0%" stopColor={PRIMARY_DARK} />
@@ -76,7 +84,7 @@ const Logo = forwardRef<HTMLDivElement, LogoProps>(
               d="M450 384c26.509 0 48-21.491 48-48s-21.491-48-48-48-48 21.491-48 48 21.491 48 48 48"
             />
           </g>
-        </svg>
+        </svg> */}
       </Box>
     );
 
