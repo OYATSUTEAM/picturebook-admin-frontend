@@ -64,11 +64,22 @@ export default function HomeView() {
           bgcolor: 'background.default',
         }}
       >
-        <video width="100%" height="auto" controls>
-          <source src="/sample.mp4" type="video/mp4" />
-          Your browser does not support the video tag.
-        </video>
-        
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+
+          <video
+            width="50%"
+            height="auto"
+            src="/hananoco_pattern01.mp4"
+            playsInline
+            autoPlay
+            muted
+            loop
+            style={{ display: 'block' }}
+          >
+            Your browser does not support the video tag.
+          </video>
+
+        </div>
         {/* <HomeMinimal /> */}
 
         {/* <HomeHugePackElements /> */}
