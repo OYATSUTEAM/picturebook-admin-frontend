@@ -76,7 +76,7 @@ export default function HomeView() {
             loop
             style={{ display: 'block' }}
           >
-            Your browser does not support the video tag.
+            お使いのブラウザは動画タグに対応していません。
           </video>
 
         </div>

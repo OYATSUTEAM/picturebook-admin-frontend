@@ -91,8 +91,8 @@ export default function AdminProfileView() {
       >
         <ProfileCover
           role={_userAbout.role}
-          name={user.displayName}
-          avatarUrl={user.avatarUrl}
+          name={user?.displayName}
+          avatarUrl={user?.avatarUrl}
           coverUrl={_userAbout.coverUrl}
         />
 

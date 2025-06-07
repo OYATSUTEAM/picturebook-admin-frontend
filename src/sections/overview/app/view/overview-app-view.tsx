@@ -38,12 +38,12 @@ export default function OverviewAppView() {
       <Grid container spacing={3}>
         <Grid xs={12} md={8}>
           <AppWelcome
-            title={`Welcome back 👋 \n ${user?.displayName}`}
-            description="If you are going to use a passage of Lorem Ipsum, you need to be sure there isn't anything."
+            title={`お帰りなさい 👋 \n ${user?.displayName}`}
+            description="ダミーテキストを使用する場合、不適切な内容が含まれていないことを確認する必要があります。"
             img={<SeoIllustration />}
             action={
               <Button variant="contained" color="primary">
-                Go Now
+                今すぐ始める
               </Button>
             }
           />
@@ -55,7 +55,7 @@ export default function OverviewAppView() {
 
         <Grid xs={12} md={4}>
           <AppWidgetSummary
-            title="Total Active Users"
+            title="アクティブユーザー総数"
             percent={2.6}
             total={18765}
             chart={{
@@ -66,7 +66,7 @@ export default function OverviewAppView() {
 
         <Grid xs={12} md={4}>
           <AppWidgetSummary
-            title="Total Installed"
+            title="インストール総数"
             percent={0.2}
             total={4876}
             chart={{
@@ -78,7 +78,7 @@ export default function OverviewAppView() {
 
         <Grid xs={12} md={4}>
           <AppWidgetSummary
-            title="Total Downloads"
+            title="ダウンロード総数"
             percent={-0.1}
             total={678}
             chart={{
@@ -90,7 +90,7 @@ export default function OverviewAppView() {
 
         <Grid xs={12} md={6} lg={4}>
           <AppCurrentDownload
-            title="Current Download"
+            title="現在のダウンロード"
             chart={{
               series: [
                 { label: 'Mac', value: 12244 },
@@ -104,33 +104,33 @@ export default function OverviewAppView() {
 
         <Grid xs={12} md={6} lg={8}>
           <AppAreaInstalled
-            title="Area Installed"
-            subheader="(+43%) than last year"
+            title="インストール地域"
+            subheader="昨年比（+43%）"
             chart={{
               categories: [
-                'Jan',
-                'Feb',
-                'Mar',
-                'Apr',
-                'May',
-                'Jun',
-                'Jul',
-                'Aug',
-                'Sep',
-                'Oct',
-                'Nov',
-                'Dec',
+                '1月',
+                '2月',
+                '3月',
+                '4月',
+                '5月',
+                '6月',
+                '7月',
+                '8月',
+                '9月',
+                '10月',
+                '11月',
+                '12月',
               ],
               series: [
                 {
                   year: '2019',
                   data: [
                     {
-                      name: 'Asia',
+                      name: 'アジア',
                       data: [10, 41, 35, 51, 49, 62, 69, 91, 148, 35, 51, 49],
                     },
                     {
-                      name: 'America',
+                      name: 'アメリカ',
                       data: [10, 34, 13, 56, 77, 88, 99, 77, 45, 13, 56, 77],
                     },
                   ],
@@ -139,11 +139,11 @@ export default function OverviewAppView() {
                   year: '2020',
                   data: [
                     {
-                      name: 'Asia',
+                      name: 'アジア',
                       data: [51, 35, 41, 10, 91, 69, 62, 148, 91, 69, 62, 49],
                     },
                     {
-                      name: 'America',
+                      name: 'アメリカ',
                       data: [56, 13, 34, 10, 77, 99, 88, 45, 77, 99, 88, 77],
                     },
                   ],
@@ -155,34 +155,34 @@ export default function OverviewAppView() {
 
         <Grid xs={12} lg={8}>
           <AppNewInvoice
-            title="New Invoice"
+            title="新規請求書"
             tableData={_appInvoices}
             tableLabels={[
-              { id: 'id', label: 'Invoice ID' },
-              { id: 'category', label: 'Category' },
-              { id: 'price', label: 'Price' },
-              { id: 'status', label: 'Status' },
+              { id: 'id', label: '請求書ID' },
+              { id: 'category', label: 'カテゴリ' },
+              { id: 'price', label: '金額' },
+              { id: 'status', label: 'ステータス' },
               { id: '' },
             ]}
           />
         </Grid>
 
         <Grid xs={12} md={6} lg={4}>
-          <AppTopRelated title="Top Related Applications" list={_appRelated} />
+          <AppTopRelated title="関連アプリランキング" list={_appRelated} />
         </Grid>
 
         <Grid xs={12} md={6} lg={4}>
-          <AppTopInstalledCountries title="Top Installed Countries" list={_appInstalled} />
+          <AppTopInstalledCountries title="インストール国ランキング" list={_appInstalled} />
         </Grid>
 
         <Grid xs={12} md={6} lg={4}>
-          <AppTopAuthors title="Top Authors" list={_appAuthors} />
+          <AppTopAuthors title="著者ランキング" list={_appAuthors} />
         </Grid>
 
         <Grid xs={12} md={6} lg={4}>
           <Stack spacing={3}>
             <AppWidget
-              title="Conversion"
+              title="コンバージョン"
               total={38566}
               icon="solar:user-rounded-bold"
               chart={{
@@ -191,7 +191,7 @@ export default function OverviewAppView() {
             />
 
             <AppWidget
-              title="Applications"
+              title="アプリケーション"
               total={55566}
               icon="fluent:mail-24-filled"
               color="info"
