@@ -64,6 +64,10 @@ export default function HomeView() {
           bgcolor: 'background.default',
         }}
       >
+        <video width="100%" height="auto" controls>
+          <source src="/sample.mp4" type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
         
         {/* <HomeMinimal /> */}
 
