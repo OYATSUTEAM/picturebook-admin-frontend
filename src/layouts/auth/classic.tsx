@@ -20,19 +20,19 @@ import Logo from 'src/components/logo';
 const METHODS = [
   {
     id: 'jwt',
-    label: 'Jwt',
+    label: 'JWT',
     path: paths.auth.jwt.login,
     icon: '/assets/icons/auth/ic_jwt.svg',
   },
   {
     id: 'firebase',
-    label: 'Firebase',
+    label: 'ファイアベース',
     path: paths.auth.firebase.login,
     icon: '/assets/icons/auth/ic_firebase.svg',
   },
   {
     id: 'amplify',
-    label: 'Amplify',
+    label: 'アンプリファイ',
     path: paths.auth.amplify.login,
     icon: '/assets/icons/auth/ic_amplify.svg',
   },
@@ -44,7 +44,7 @@ const METHODS = [
   },
   {
     id: 'supabase',
-    label: 'Supabase',
+    label: 'スーパーベース',
     path: paths.auth.supabase.login,
     icon: '/assets/icons/auth/ic_supabase.svg',
   },
@@ -105,12 +105,12 @@ export default function AuthClassicLayout({ children, image, title }: Props) {
       }}
     >
       <Typography variant="h3" sx={{ maxWidth: 480, textAlign: 'center' }}>
-        {title || 'Hi, Welcome back'}
+        {title || 'こんにちは、お帰りなさい'}
       </Typography>
 
       <Box
         component="img"
-        alt="auth"
+        alt="認証"
         src={image || '/assets/illustrations/illustration_dashboard.png'}
         sx={{
           maxWidth: {

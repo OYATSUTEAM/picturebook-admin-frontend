@@ -41,8 +41,8 @@ export default function JwtLoginView() {
   const password = useBoolean();
 
   const LoginSchema = Yup.object().shape({
-    email: Yup.string().required('Email is required').email('Email must be a valid email address'),
-    password: Yup.string().required('Password is required'),
+    email: Yup.string().required('メールアドレスは必須です').email('メールアドレスの形式が正しくありません'),
+    password: Yup.string().required('パスワードは必須です'),
   });
 
   const defaultValues = {
@@ -75,13 +75,13 @@ export default function JwtLoginView() {
 
   const renderHead = (
     <Stack spacing={2} sx={{ mb: 5 }}>
-      <Typography variant="h4">Sign in to Minimal</Typography>
+      <Typography variant="h4">HANANOKOにサインイン</Typography>
 
       <Stack direction="row" spacing={0.5}>
-        <Typography variant="body2">New user?</Typography>
+        <Typography variant="body2">新規ユーザーですか？</Typography>
 
         <Link component={RouterLink} href={paths.auth.register} variant="subtitle2">
-          Create an account
+          アカウントを作成
         </Link>
       </Stack>
     </Stack>
@@ -89,11 +89,11 @@ export default function JwtLoginView() {
 
   const renderForm = (
     <Stack spacing={2.5}>
-      <RHFTextField name="email" label="Email address" />
+      <RHFTextField name="email" label="メールアドレス" />
 
       <RHFTextField
         name="password"
-        label="Password"
+        label="パスワード"
         type={password.value ? 'text' : 'password'}
         InputProps={{
           endAdornment: (
@@ -107,7 +107,7 @@ export default function JwtLoginView() {
       />
 
       <Link variant="body2" color="inherit" underline="always" sx={{ alignSelf: 'flex-end' }}>
-        Forgot password?
+        パスワードをお忘れですか？
       </Link>
 
       <LoadingButton
@@ -118,7 +118,7 @@ export default function JwtLoginView() {
         variant="contained"
         loading={isSubmitting}
       >
-        Login
+        ログイン
       </LoadingButton>
     </Stack>
   );
